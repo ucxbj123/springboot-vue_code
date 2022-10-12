@@ -1,4 +1,4 @@
-import { login, loginv2, logout, getInfo, getInfov2 } from '@/api/user'
+import { login, loginv2, logout, logoutv2, getInfo, getInfov2 } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -139,6 +139,21 @@ const actions = {
         commit('SET_USERID', userID) //设置用户ID
         // commit('SET_USERTYPE', usertype) //设置用户类型
         resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // user logout
+  logoutv2({ commit, state }) {
+    // console.log('登出',state.token) 调试
+    return new Promise((resolve, reject) => {
+      logoutv2(state.token).then(() => {
+        removeToken() // must remove  token  first
+        resetRouter()
+        commit('RESET_STATE')
+        resolve()
       }).catch(error => {
         reject(error)
       })

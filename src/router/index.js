@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import studentsRouter from '@/router/modules/students'
 
 Vue.use(Router)
 
@@ -55,7 +56,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }   
+      meta: { title: '首页', icon: 'dashboard' }   
     }]
   },
 
@@ -163,6 +164,8 @@ export const constantRoutes = [
       }
     ]
   },
+
+  studentsRouter,
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

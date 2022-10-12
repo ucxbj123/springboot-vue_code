@@ -41,3 +41,11 @@ export function getInfov2(token) {
     params: { token }
   })
 }
+
+export function logoutv2(token) {
+  return request({
+    url: '/login/logout',
+    method: 'post',
+    data: {token: token}
+  })
+}
