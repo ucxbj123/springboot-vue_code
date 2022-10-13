@@ -11,11 +11,14 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
+          <router-link to="/dashboard">
             <el-dropdown-item>
               首页
             </el-dropdown-item>
           </router-link>
+          <el-dropdown-item @click.native="centerDialogVisible = true">
+              修改密码
+          </el-dropdown-item>
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
@@ -27,14 +30,33 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      <el-dialog
+        title="修改密码"
+        :visible.sync="centerDialogVisible"
+        width="38%"
+        >
+        <el-row :gutter="20">
+          <el-col :span="8" :offset="2"><span>登录账号 </span><el-input label="登录账号" disabled v-model="userID"></el-input></el-col>
+          <el-col :span="8" :offset="4">姓名 <el-input label="姓名" disabled v-model="name"></el-input></el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="8" :offset="2">原密码 <el-input placeholder="请输入原密码" clearable show-password v-model="changeForm.oldpassword"></el-input></el-col>
+          <el-col :span="8" :offset="4">新密码 <el-input placeholder="请输入新密码" clearable show-password v-model="changeForm.newpassword"></el-input></el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="Closedialog">取 消</el-button>
+          <el-button type="primary" @click="ChangePassword">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters , mapState} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import request from '@/utils/request'
 
 export default {
   components: {
@@ -43,7 +65,14 @@ export default {
   },
   data() {
     return {
-      publicPath:process.env.BASE_URL   //指向public内的静态资源
+      publicPath: process.env.BASE_URL,   //指向public内的静态资源
+      centerDialogVisible: false,
+      changeForm:{
+        oldpassword: '',
+        newpassword: '',
+        Id: this.$store.state.user.userID,
+        type: this.$store.state.user.usertype
+      }
     }
   },
   computed: {
@@ -54,7 +83,8 @@ export default {
     getUseImage(){
       // console.log(this.publicPath+this.avatar) 调试
       return this.publicPath+this.avatar //获取后台返回给全局user.avatar的图片URL并解析
-    }
+    },
+    ...mapState('user',['name','userID','usertype']),
   },
   methods: {
     toggleSideBar() {
@@ -63,6 +93,48 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logoutv2')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    ChangePassword(){//修改密码
+      if(this.changeForm.oldpassword =='' || this.changeForm.newpassword ==''){
+        this.$message({
+          message:'密码不能为空',
+          type:'warning'
+        })
+        return
+      }
+      request({//异步请求
+        responseType:'json',
+        data: this.changeForm,
+        url: '/login/updatepassword',
+        method: 'post'
+      }).then(response =>{
+        this.$message({
+          message:response.data.result,
+          type:'success'
+        })
+      })
+      // .catch(error =>{
+      //   this.$message({
+      //     message:error,
+      //     type:'error'
+      //   })
+      // })
+    },
+
+    Closedialog(){//关闭修改密码界面
+      this.centerDialogVisible = false
+      this.changeForm.newpassword = ''
+      this.changeForm.oldpassword = ''
+    },
+
+  },
+
+  watch:{
+    centerDialogVisible(newValue,oldValue){ //对dialog关闭进行监视，若关闭则设置新旧密码为空，防止密码泄露
+        if(newValue === false){
+          this.changeForm.newpassword = ''
+          this.changeForm.oldpassword = ''
+        }
     }
   }
 }

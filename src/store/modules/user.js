@@ -109,6 +109,7 @@ const actions = {
         const res = response.data
         context.commit('SET_TOKEN', res.token)
         context.commit('SET_USERTYPE', usertype)
+        context.commit('SET_USERID', userID)
         setToken(res.token)
         console.log('设置token成功', res.token)
         resolve()
@@ -136,7 +137,7 @@ const actions = {
         
         commit('SET_NAME', name) //设置用户名
         commit('SET_AVATAR', avatar) //设置用户头像路径
-        commit('SET_USERID', userID) //设置用户ID
+        // commit('SET_USERID', userID) //设置用户ID
         // commit('SET_USERTYPE', usertype) //设置用户类型
         resolve(data)
       }).catch(error => {

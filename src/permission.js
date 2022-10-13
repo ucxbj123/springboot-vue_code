@@ -27,7 +27,7 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
+      const hasGetUserInfo = store.getters.name    //保证用户信息一直保存在前端的vuex中，如果没有则通过token进行用户的信息获取(后续根据需要设置多个条件判断)
       if (hasGetUserInfo) {
         next()
       } else {
