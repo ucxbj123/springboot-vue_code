@@ -27,15 +27,36 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name    //保证用户信息一直保存在前端的vuex中，如果没有则通过token进行用户的信息获取(后续根据需要设置多个条件判断)
-      if (hasGetUserInfo) {
+      let hasinfo
+      if(store.getters.name && store.getters.userID.length > 0){
+        hasinfo = true
+      }
+      // const hasGetUserInfo = store.getters.name    //保证用户信息一直保存在前端的vuex中，如果没有则通过token进行用户的信息获取(后续根据需要设置多个条件判断)
+      
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      if(hasRoles){
+        hasinfo = true
+      }else{
+        hasinfo =false
+      }
+      if (hasinfo) {
+        console.log('有token又有info') //调试
         next()
       } else {
+        console.log('有token无info') //调试
         try {
           // get user info
-          await store.dispatch('user/getInfov2')
+          const { roles } = await store.dispatch('user/getInfov2')
+          console.log('roles:',roles)
 
-          next()
+          // generate accessible routes map based on roles
+          console.log('permission/generateRoutes前')  //调试
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          console.log('permission/generateRoutes')  //调试
+          // dynamically add accessible routes
+          router.addRoutes(accessRoutes)
+          console.log('addRoutes')
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

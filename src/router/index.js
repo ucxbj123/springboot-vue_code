@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import studentsRouter from '@/router/modules/students'
+import teacherRouter from '@/router/modules/teacher'
 
 Vue.use(Router)
 
@@ -165,10 +166,13 @@ export const constantRoutes = [
     ]
   },
 
-  studentsRouter,
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
+]
+
+export const asyncRoutes = [
+  studentsRouter,
+  teacherRouter
 ]
 
 const createRouter = () => new Router({

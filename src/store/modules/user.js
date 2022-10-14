@@ -9,7 +9,8 @@ const getDefaultState = () => {
     avatar: '',  //头像的路径，在actions的getinfo()动态获取用户的头像路径进行展示(后台返回的头像URL)
     baseavatar: '',
     userID:'' , //用户登录id
-    usertype:'' //用户类型
+    usertype:'', //用户类型
+    roles: [] //角色权限
   }
 }
 
@@ -34,6 +35,9 @@ const mutations = {
   },
   SET_USERTYPE: (state, usertype) => {
     state.usertype = usertype
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
   }
 }
 
@@ -133,11 +137,12 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar, userID, usertype } = data
+        const { name, avatar, userID, usertype, roles } = data
         
         commit('SET_NAME', name) //设置用户名
         commit('SET_AVATAR', avatar) //设置用户头像路径
-        // commit('SET_USERID', userID) //设置用户ID
+        commit('SET_ROLES', roles) //设置角色权限
+        commit('SET_USERID', userID) //设置用户ID
         // commit('SET_USERTYPE', usertype) //设置用户类型
         resolve(data)
       }).catch(error => {

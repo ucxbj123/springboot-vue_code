@@ -157,17 +157,17 @@ export default {
           this.$store.dispatch('user/loginv2', this.loginForm).then(
             response => {
               console.log('handleLogi执行成功',this)
-              if(this.$store.getters.usertype == 'teacher'){
-                // console.log('路由',teacherRouter)
-                this.$router.addRoutes(teacherRouter) //动态添加路由规则
-                this.$router.options.routes = this.$router.options.routes.concat(teacherRouter) //手动更新
-                console.log('动态添加路由成功',this.$router)
+              // if(this.$store.getters.usertype == 'teacher'){
+              //   // console.log('路由',teacherRouter)
+              //   this.$router.addRoutes(teacherRouter) //动态添加路由规则
+              //   this.$router.options.routes = this.$router.options.routes.concat(teacherRouter) //手动更新
+              //   console.log('动态添加路由成功',this.$router)
+              //   this.$router.push({ path: this.redirect || '/' })
+              //   this.loading = false
+              // }else{
                 this.$router.push({ path: this.redirect || '/' })
                 this.loading = false
-              }else{
-                this.$router.push({ path: this.redirect || '/' })
-                this.loading = false
-              }
+              // }
               
             }
           )

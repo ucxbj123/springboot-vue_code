@@ -1,9 +1,11 @@
 import Layout from '@/layout'
 
-const teacherRouter = [
+const teacherRouter = 
     {
         path: '/teacher',
+        name: 'Teacher',
         component: Layout,
+        meta: { title: '教师主页', icon: 'el-icon-s-home', roles: ['teacher'] },
         children:[
             {
                 path: 'main',
@@ -13,6 +15,6 @@ const teacherRouter = [
             }
         ]
     }
-]
+
 
 export default teacherRouter
