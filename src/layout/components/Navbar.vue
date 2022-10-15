@@ -16,18 +16,27 @@
               首页
             </el-dropdown-item>
           </router-link>
+
           <el-dropdown-item @click.native="centerDialogVisible = true">
               修改密码
           </el-dropdown-item>
+
+          <el-dropdown-item @click.native="updatesetting">
+              {{settingContext}}
+          </el-dropdown-item>
+
           <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
+
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
           </a>
+
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
+
         </el-dropdown-menu>
       </el-dropdown>
       <el-dialog
@@ -72,7 +81,9 @@ export default {
         newpassword: '',
         Id: this.$store.state.user.userID,
         type: this.$store.state.user.usertype
-      }
+      },
+      settingContext:'关闭系统设置',
+      showSettings: this.$store.state.settings.showSettings
     }
   },
   computed: {
@@ -127,14 +138,32 @@ export default {
       this.changeForm.oldpassword = ''
     },
 
+    updatesetting(){ //控制右边的系统设置的显示
+      if(this.showSettings){
+        this.settingContext = '打开系统设置'
+        this.showSettings = false
+        this.$store.dispatch('settings/changeSetting',{
+          key: 'showSettings',
+          value: false
+        })
+      }else{
+        this.settingContext = '关闭系统设置'
+        this.showSettings = true
+        this.$store.dispatch('settings/changeSetting',{
+          key: 'showSettings',
+          value: true
+        })
+      }
+    }
+
   },
 
   watch:{
     centerDialogVisible(newValue,oldValue){ //对dialog关闭进行监视，若关闭则设置新旧密码为空，防止密码泄露
-        if(newValue === false){
-          this.changeForm.newpassword = ''
-          this.changeForm.oldpassword = ''
-        }
+      if(newValue === false){
+        this.changeForm.newpassword = ''
+        this.changeForm.oldpassword = ''
+      }
     }
   }
 }

@@ -8,15 +8,20 @@
         <tags-view v-if="needTagsView" />
       </div>
       <app-main />
+      <right-panel v-if="showSettings">
+        <settings />
+      </right-panel>
     </div>
   </div>
 </template>
 
 <script>
+import RightPanel from '@/components/RightPanel'
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 import TagsView from './components/TagsView/index.vue'
+import Settings from './components/Settings'
 
 export default {
   name: 'Layout',
@@ -24,7 +29,9 @@ export default {
     Navbar,
     Sidebar,
     AppMain,
-    TagsView
+    TagsView,
+    RightPanel,
+    Settings
   },
   mixins: [ResizeMixin],
   computed: {
@@ -47,6 +54,7 @@ export default {
     },
     ...mapState({
       needTagsView: state => state.settings.tagsView,
+      showSettings: state => state.settings.showSettings,
     })
   },
   methods: {
