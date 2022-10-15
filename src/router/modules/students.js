@@ -23,7 +23,7 @@ const studentsRouter =
                 path: 'list',
                 name: 'studentlist',
                 component: () => import('@/views/student/studentList'),
-                meta: { title: '学生列表', icon: 'el-icon-user',roles: ['student'] }
+                meta: { title: '学生列表', icon: 'el-icon-user',roles: ['student'], affix: true  }
             }
         ]
     }

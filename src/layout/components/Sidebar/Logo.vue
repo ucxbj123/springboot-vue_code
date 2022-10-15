@@ -1,10 +1,12 @@
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
+      <!-- 如果关闭了左边菜单栏，logo和主题显示其中一个；若logo获取不到则显示主题-->
+      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/"> 
         <img v-if="logo" :src="logo" class="sidebar-logo">
         <h1 v-else class="sidebar-title">{{ title }} </h1>
       </router-link>
+      <!-- 如果左边菜单栏在打开状态，logo和主题显示一并显示；若logo获取不到则显示主题-->
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }} </h1>

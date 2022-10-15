@@ -26,6 +26,7 @@ import Layout from '@/layout'
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+    affix: true                  if set true, the tag will affix in the tags-view(如果设置为true，该组件会一直挂在标签导航中)
   }
  */
 
@@ -39,6 +40,17 @@ import Layout from '@/layout'
  * breadcrumb: false：如果设置为false, 标签栏将不会显示当前页面路径
  */
 export const constantRoutes = [
+  {
+    path: '/redirect',//解决重定向问题
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
   {
     path: '/login',
     component: () => import('@/views/login/index'),

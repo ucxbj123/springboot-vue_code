@@ -13,11 +13,13 @@
         @contextmenu.prevent.native="openMenu(tag,$event)"
       >
         {{ tag.title }}
+        <!-- 如果属于附加组件，则不提供关闭视图的功能，即v-if = false-->
         <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
+      <!-- 如果属于附加组件，则不提供关闭视图的功能，即v-if = false-->
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">Close</li>
       <li @click="closeOthersTags">Close Others</li>
       <li @click="closeAllTags(selectedTag)">Close All</li>
@@ -62,17 +64,20 @@ export default {
     }
   },
   mounted() {
+    //初始化，将首页直接添加到VisitedView和cachedViews（缓存路由组件名单）
     this.initTags()
     this.addTags()
   },
   methods: {
-    isActive(route) {
+    isActive(route) { //判断视图是否属于当前视图，也就是高亮（选中）
       return route.path === this.$route.path
     },
     isAffix(tag) {
-      return tag.meta && tag.meta.affix
+      // let cc = tag.meta && tag.meta.affix
+      // console.log('判断是否是affix：',cc,tag)  //调试
+      return tag.meta && tag.meta.affix //判断是否为附加组件，若是则会一直挂在tagsview
     },
-    filterAffixTags(routes, basePath = '/') {
+    filterAffixTags(routes, basePath = '/') {//通过获取vuex中的有权限的路由，寻找附加组件，并返回附加组件的名单
       let tags = []
       routes.forEach(route => {
         if (route.meta && route.meta.affix) {
@@ -96,13 +101,13 @@ export default {
     initTags() {
       const affixTags = this.affixTags = this.filterAffixTags(this.routes)
       for (const tag of affixTags) {
-        // Must have tag name
+        // Must have tag name 路由必须设置有name才添加到VisitedView（用户访问过的页面）
         if (tag.name) {
           this.$store.dispatch('tagsView/addVisitedView', tag)
         }
       }
     },
-    addTags() {
+    addTags() {//将当前的路由添加到VisitedView和cachedViews（缓存路由组件名单）
       const { name } = this.$route
       if (name) {
         this.$store.dispatch('tagsView/addView', this.$route)
@@ -124,19 +129,21 @@ export default {
         }
       })
     },
-    refreshSelectedTag(view) {
+    refreshSelectedTag(view) {//在缓存路由组件名单中删除view，然后等数据更新后重定向到view（$route一旦变化就会添加view到缓存路由名单上）
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view
-        this.$nextTick(() => {
+        this.$nextTick(() => {//等CachedView更新后再执行重定向
+          console.log('刷新：',fullPath)  //调试
           this.$router.replace({
             path: '/redirect' + fullPath
+            // path:  fullPath
           })
         })
       })
     },
     closeSelectedTag(view) {
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
-        if (this.isActive(view)) {
+        if (this.isActive(view)) {//若关闭的页面是当前页面（高亮），关闭之后自动跳转到visitedViews最后一个页面
           this.toLastView(visitedViews, view)
         }
       })
@@ -149,7 +156,7 @@ export default {
     },
     closeAllTags(view) {
       this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
-        if (this.affixTags.some(tag => tag.path === view.path)) {
+        if (this.affixTags.some(tag => tag.path === view.path)) {//判断鼠标悬浮的tagsview是否属于附加组件，若是则不跳转到最后一个页面（因为附加组件不会关闭视图，会一直挂载）
           return
         }
         this.toLastView(visitedViews, view)
@@ -157,15 +164,15 @@ export default {
     },
     toLastView(visitedViews, view) {
       const latestView = visitedViews.slice(-1)[0]
-      if (latestView) {
+      if (latestView) { //如果关闭页面后，visitedViews不为空则跳转最后一个页面
         this.$router.push(latestView.fullPath)
-      } else {
+      } else {//visitedViews若为空则跳转到主页
         // now the default is to redirect to the home page if there is no tags-view,
         // you can adjust it according to your needs.
-        if (view.name === 'Dashboard') {
+        if (view.name === 'Dashboard') {//在visitedViews为空情况下，判断关闭的view是否为首页，若是则进行重新加载
           // to reload home page
           this.$router.replace({ path: '/redirect' + view.fullPath })
-        } else {
+        } else {//否则进行重定向/，一样会跳转到首页
           this.$router.push('/')
         }
       }
@@ -185,7 +192,7 @@ export default {
 
       this.top = e.clientY
       this.visible = true
-      this.selectedTag = tag
+      this.selectedTag = tag    //右键打开菜单时，获取view并赋值selectedTag，这样进行关闭view，对应的方法可以获取右键弹出菜单时，鼠标停在哪个tagsview
     },
     closeMenu() {
       this.visible = false

@@ -25,6 +25,8 @@ router.beforeEach(async(to, from, next) => {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
+
+
       NProgress.done()
     } else {
       let hasinfo
@@ -58,6 +60,7 @@ router.beforeEach(async(to, from, next) => {
           console.log('addRoutes')
           next({ ...to, replace: true })
         } catch (error) {
+          console.log('路由跳转异常',error)
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')

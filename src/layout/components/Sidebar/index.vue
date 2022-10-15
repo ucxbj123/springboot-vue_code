@@ -49,7 +49,7 @@ export default {
     variables() {
       return variables
     },
-    isCollapse() {
+    isCollapse() {//若菜单栏在打开状态（true），LOGO不崩溃（Collapse=false），关闭则崩溃
       return !this.sidebar.opened
     }
   }

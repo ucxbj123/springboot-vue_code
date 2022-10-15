@@ -22,7 +22,7 @@ const mutations = {
   DEL_VISITED_VIEW: (state, view) => {
     for (const [i, v] of state.visitedViews.entries()) {
       if (v.path === view.path) {
-        state.visitedViews.splice(i, 1)
+        state.visitedViews.splice(i, 1) //splice删除对应的视图
         break
       }
     }
