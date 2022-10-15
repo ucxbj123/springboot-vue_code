@@ -8,6 +8,8 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+//注意事项1：因为应用了缓存组件keep-alive，需要路由的name属性和组件的name一致，否则会有内存溢出风险;
+//注意事项2：放置到路由表的组件都必须设置组件名，否则缓存无效，切换界面，数据不会缓存。
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html

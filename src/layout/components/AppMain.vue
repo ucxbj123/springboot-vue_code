@@ -1,7 +1,9 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
-      <router-view :key="key" />
+      <keep-alive :include="cachedViews">
+        <router-view :key="key" />
+      </keep-alive>
     </transition>
   </section>
 </template>
@@ -12,7 +14,10 @@ export default {
   computed: {
     key() {
       return this.$route.path
-    }
+    },
+    cachedViews() {//缓存的组件
+      return this.$store.state.tagsView.cachedViews
+    },
   }
 }
 </script>

@@ -19,7 +19,12 @@ export default {
     }
   },
   watch: {
-    $route() {
+    $route(value) {
+      // if you go to the redirect page, do not update the breadcrumbs 如果是刷新当前页面就不更新导航栏；这个与tagsview的提高的刷新功能配合
+      if (value.path.startsWith('/redirect/')){
+        return
+      }
+      console.log('路由变化了',value)   //调试
       this.getBreadcrumb()
     }
   },
