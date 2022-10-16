@@ -71,7 +71,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }   
+      meta: { title: '首页', icon: 'dashboard', affix: true }   
     }]
   },
 
@@ -180,13 +180,24 @@ export const constantRoutes = [
     ]
   },
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  // // 404 page must be placed at the end !!!
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 export const asyncRoutes = [
   studentsRouter,
-  teacherRouter
+  teacherRouter,
+
+  // 404 page must be placed at the end !!! 
+  /**
+   * 点浏览器的刷新出现404问题原因：
+   *  权限控制的路由模块是动态添加进去的，404监听路由是在默认路由里面的，优先级比动态路由要高，所以刷新后默认先被404接管了。
+   * 方案：
+   *    把404监听路由也放到动态路由的末尾就可以了（vue+element-admin也是同样做法）
+   * 个人思考：因为很多的全局数据都是存储在vuex，一旦点浏览器的刷新功能，vuex的数据则会丢失，全局路由守卫虽然重新获取数据，但是路由跳转会直接向静态路由进行匹配，若404
+   *          配置在静态路由，相当于找到了组件，不会重定向跳转到正确的组件。
+   */
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({

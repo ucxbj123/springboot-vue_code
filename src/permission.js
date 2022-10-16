@@ -30,6 +30,8 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       let hasinfo
+      // console.log('roles:',store.getters.roles)  //调试
+      // console.log('roles:',store.getters.permission_routes)
       if(store.getters.name && store.getters.userID.length > 0){
         hasinfo = true
       }
@@ -47,9 +49,10 @@ router.beforeEach(async(to, from, next) => {
       } else {
         console.log('有token无info') //调试
         try {
+          //首次登录 获取用户角色并生成动态路由
           // get user info
           const { roles } = await store.dispatch('user/getInfov2')
-          console.log('roles:',roles)
+          
 
           // generate accessible routes map based on roles
           console.log('permission/generateRoutes前')  //调试
