@@ -18,11 +18,11 @@
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
+      <li @click="refreshSelectedTag(selectedTag)"><i class="el-icon-refresh" />  刷新</li>
       <!-- 如果属于附加组件，则不提供关闭视图的功能，即v-if = false-->
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">Close</li>
-      <li @click="closeOthersTags">Close Others</li>
-      <li @click="closeAllTags(selectedTag)">Close All</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)"><i class="el-icon-circle-close" />  关闭</li>
+      <li @click="closeOthersTags"><i class="el-icon-close" />  关闭其他</li>
+      <li @click="closeAllTags(selectedTag)"><i class="el-icon-circle-close" />  关闭所有</li>
     </ul>
   </div>
 </template>
