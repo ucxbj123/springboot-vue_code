@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Clipboard from 'clipboard'
 
+//clipboard剪切、复制、粘贴等功能插件
+
 function clipboardSuccess() {
   Vue.prototype.$message({
     message: 'Copy successfully',
