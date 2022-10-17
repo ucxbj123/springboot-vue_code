@@ -111,13 +111,17 @@ const actions = {
       response => {
         console.log(response)
         const res = response.data
-        context.commit('SET_TOKEN', res.token)
-        context.commit('SET_USERTYPE', usertype)
-        context.commit('SET_USERID', userID)
-        setToken(res.token)
-        console.log('设置token成功', res.token)
-        resolve()
+        if (res.status){
+          context.commit('SET_TOKEN', res.token)
+          context.commit('SET_USERTYPE', usertype)
+          context.commit('SET_USERID', userID)
+          setToken(res.token)
+          console.log('设置token成功', res.token)
+          resolve(res)
         // return true
+        }else{
+          resolve(res)
+        }
       }
     ).catch(error => {
       reject(error)

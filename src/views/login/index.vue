@@ -116,7 +116,7 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      imageurl:'http://localhost:8082/login/getVerifiCodeImage'
+      imageurl:''
     }
   },
   watch: {
@@ -129,6 +129,8 @@ export default {
   },
   mounted(){
     console.log(this) //方便查看vue身上的数据
+    //初始化获取验证码
+    this.getimage()
 
   },
   methods: {
@@ -165,8 +167,16 @@ export default {
               //   this.$router.push({ path: this.redirect || '/' })
               //   this.loading = false
               // }else{
-                this.$router.push({ path: this.redirect || '/' })
-                this.loading = false
+                if (response.status){
+                  console.log('login.vue 账号验证成功',response)
+                  this.$router.push({ path: this.redirect || '/' })
+                  this.loading = false
+                }else{
+                  console.log('login.vue 账号验证失败',response)
+                  this.$message.error(response.msg);
+                  this.loading = false
+                }
+                
               // }
               
             }

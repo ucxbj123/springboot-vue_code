@@ -46,7 +46,7 @@
         >
         <el-row :gutter="20">
           <el-col :span="8" :offset="2"><span>登录账号 </span><el-input label="登录账号" disabled v-model="userID"><svg-icon slot="prefix" icon-class="people" /></el-input></el-col>
-          <el-col :span="8" :offset="4">姓名 <el-input label="姓名" disabled v-model="name"><i slot="prefix" class="el-icon-s-check" /></el-input></el-col>
+          <el-col :span="8" :offset="4">姓名 <el-input label="姓名" disabled v-model="name"><svg-icon slot="prefix" icon-class="用户" /></el-input></el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="8" :offset="2">原密码 <el-input placeholder="请输入原密码" clearable show-password v-model="changeForm.oldpassword"><svg-icon slot="prefix" icon-class="password" /></el-input></el-col>
