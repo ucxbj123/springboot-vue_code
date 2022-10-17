@@ -57,11 +57,11 @@ export const constantRoutes = [
     hidden: true  
   },
 
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+  // {
+  //   path: '/404',
+  //   component: () => import('@/views/404'),
+  //   hidden: true
+  // },
 
   {
     path: '/',
@@ -81,6 +81,7 @@ export const constantRoutes = [
     redirect: '/example/table',
     name: 'Example',
     meta: { title: 'Example', icon: 'el-icon-s-help' },
+    hidden: true,
     children: [
       {
         path: 'table',
@@ -100,6 +101,7 @@ export const constantRoutes = [
   {
     path: '/form',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'index',
@@ -115,6 +117,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/nested/menu1',
     name: 'Nested',
+    hidden: true,
     meta: {
       title: 'Nested',
       icon: 'nested'
@@ -172,6 +175,7 @@ export const constantRoutes = [
   {
     path: 'external-link',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
@@ -180,6 +184,8 @@ export const constantRoutes = [
     ]
   },
 
+  
+
   // // 404 page must be placed at the end !!!
   // { path: '*', redirect: '/404', hidden: true }
 ]
@@ -187,6 +193,31 @@ export const constantRoutes = [
 export const asyncRoutes = [
   studentsRouter,
   teacherRouter,
+
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'icons', icon: 'icon', noCache: true, roles: ['admin'] }
+      }
+    ]
+  },
+
+  {
+    path: '/404',
+    component: Layout,
+    redirect: '/404/main',
+    children: [{
+      path: 'main',
+      name: '404',
+      component: () => import('@/views/404'),
+      meta: { title: '404', icon: '404' }   
+    }]
+  },
 
   // 404 page must be placed at the end !!! 
   /**
