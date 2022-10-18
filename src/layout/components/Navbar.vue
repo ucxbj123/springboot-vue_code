@@ -121,15 +121,11 @@ export default {
       }).then(response =>{
         this.$message({
           message:response.data.result,
-          type:'success'
+          type:response.data.status
         })
+        this.centerDialogVisible = false
+
       })
-      // .catch(error =>{
-      //   this.$message({
-      //     message:error,
-      //     type:'error'
-      //   })
-      // })
     },
 
     Closedialog(){//关闭修改密码界面
