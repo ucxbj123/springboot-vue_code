@@ -81,7 +81,6 @@
 // import { validUsername } from '@/utils/validate'
 import axios from 'axios'
 
-import teacherRouter from '@/router/modules/teacher'
 
 export default {
   name: 'Login',
@@ -95,7 +94,8 @@ export default {
     // }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        // callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能少于6位'))
       } else {
         callback()
       }
@@ -180,7 +180,9 @@ export default {
               // }
               
             }
-          )
+          ).catch(error => {
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false
