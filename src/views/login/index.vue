@@ -51,7 +51,7 @@
 
       <el-form-item prop="verifiCode">
         <span class="svg-container">
-          <i class="el-icon-mobile-phone"></i>
+          <svg-icon icon-class="验证码3" />
         </span>
         <el-input
           ref="verifiCode"

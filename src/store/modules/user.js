@@ -147,7 +147,7 @@ const actions = {
         commit('SET_AVATAR', avatar) //设置用户头像路径
         commit('SET_ROLES', roles) //设置角色权限
         commit('SET_USERID', userID) //设置用户ID
-        // commit('SET_USERTYPE', usertype) //设置用户类型
+        commit('SET_USERTYPE', usertype) //设置用户类型
         resolve(data)
       }).catch(error => {
         reject(error)
