@@ -169,6 +169,13 @@ const actions = {
       })
     })
   },
+
+  //更新token，包括更新cookie中的token
+  updateToken({commit},token){
+      setToken(token)
+      commit('SET_TOKEN')
+  }
+
 }
 
 export default {
