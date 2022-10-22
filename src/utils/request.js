@@ -47,16 +47,18 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+        console.log('50008')
         // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+        let message
+        if (res.data == null || res.data == '' || res.data ==undefined){ //判断后台是否返回提示信息，若没有则使用统一提示，若有则显示
+          message = 'You have been logged out, you can cancel to stay on this page, or login in again'
+        }else{
+          message = res.data
+        }
+        MessageBox.confirm(message, '提示', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'
@@ -66,8 +68,14 @@ service.interceptors.response.use(
             location.reload()
           })
         })
+      }else{
+        Message({
+          message: res.data || 'Error',
+          type: 'error',
+          duration: 5 * 1000
+        })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(message || 'Error'))
     } else {
       // console.log('当前响应code通过', res.token)调试
       // 不要返回res，因为res=response.data，个人建议返回response
