@@ -5,6 +5,9 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <!-- 与登录账号头像同一个子菜单-->
+      <el-tooltip content="系统设置" placement="bottom" effect="light" ><span class="right-menu-item hover-effect" @click="updatesetting"><i class="el-icon-setting" /></span></el-tooltip>
+
       <el-dropdown class="avatar-container hover-effect  right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img :src="getUseImage+'?imageView2/1/w/80/h/80'" class="user-avatar">
