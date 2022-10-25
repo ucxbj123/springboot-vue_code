@@ -64,7 +64,11 @@
         />
       </el-form-item>
       <div style="margin-bottom:10px;height:47px">
-          <el-image :src="imageurl"  @click.native="getimage"></el-image>
+          <el-row :gutter="10">
+            <el-col :span="14"><el-image :src="imageurl"  @click.native="getimage"></el-image></el-col>
+            <el-col :span="4"><span style="color:white;">记住我</span></el-col>
+            <el-col :span="6"><el-switch v-model="loginForm.isrememberMe"></el-switch></el-col>
+          </el-row>
       </div>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
@@ -106,7 +110,8 @@ export default {
         password: '',
         verifiCode:'',
         usertype:'student',
-        userID:''
+        userID:'',
+        isrememberMe: false,
       },
       loginRules: {
         userID: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],

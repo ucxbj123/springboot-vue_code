@@ -105,7 +105,7 @@ const actions = {
   //以下是个人重写
   // springboot user/login
   loginv2(context, userInfo) {
-    const { username, password, verifiCode, usertype, userID  } = userInfo
+    const { username, password, verifiCode, usertype, userID, isrememberMe  } = userInfo
     return new Promise((resolve, reject)=>{
     loginv2({ userID: userID.trim(), password: password, verifiCode:verifiCode, usertype:usertype }).then(
       response => {
@@ -115,7 +115,7 @@ const actions = {
           context.commit('SET_TOKEN', res.token)
           context.commit('SET_USERTYPE', usertype)
           context.commit('SET_USERID', userID)
-          setToken(res.token)
+          setToken(res.token,isrememberMe)
           console.log('设置token成功', res.token)
           resolve(res)
         // return true
