@@ -44,10 +44,10 @@ router.beforeEach(async(to, from, next) => {
         hasinfo =false
       }
       if (hasinfo) {
-        console.log('有token又有info') //调试
+        // console.log('有token又有info') //调试
         next()
       } else {
-        console.log('有token无info') //调试
+        // console.log('有token无info') //调试
         try {
           //首次登录 获取用户角色并生成动态路由
           // get user info
@@ -55,15 +55,15 @@ router.beforeEach(async(to, from, next) => {
           
 
           // generate accessible routes map based on roles
-          console.log('permission/generateRoutes前')  //调试
+          // console.log('permission/generateRoutes前')  //调试
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
-          console.log('permission/generateRoutes')  //调试
+          // console.log('permission/generateRoutes')  //调试
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)
-          console.log('addRoutes')
+          // console.log('addRoutes')
           next({ ...to, replace: true })
         } catch (error) {
-          console.log('路由跳转异常',error)
+          // console.log('路由跳转异常',error)
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')

@@ -27,7 +27,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item icon="el-icon-plus">添加账号</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-circle-plus">禁用/启用账号</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-circle-plus" @click.native="updateStatus">禁用/启用账号</el-dropdown-item>
             <el-dropdown-item ><svg-icon icon-class="查看" /> 查看账号</el-dropdown-item>
             <el-dropdown-item icon="el-icon-delete">删除账号</el-dropdown-item>
           </el-dropdown-menu>
@@ -54,6 +54,19 @@
             </el-table-column>
         </el-table>
     </el-row>
+
+    <!-- 分页功能-->
+    <el-row class="page" >
+      <el-pagination
+        @size-change="SizeChange"
+        @current-change="PageChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 1, 30, 40]"
+        :page-size="10"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="userList.length">
+      </el-pagination>
+    </el-row>
   </div>
 </template>
 
@@ -77,6 +90,9 @@ export default {
       loading: false, //加载数据提示
       buttonDisabled: false, //搜索按钮，默认是不禁用
       selectRow: [], //存储选中的用户值
+      currentPage: 1, //默认当前分页是第1页
+      pagesize: 100, //每页展示多少条数据，默认是100
+
     }
   },
 
@@ -84,7 +100,6 @@ export default {
         getUser(){
             this.buttonDisabled = true
             this.loading = true
-            console.log('userlist.vue:',this.userID)
             request({
                 method:'post',
                 url: 'system/getUser',
@@ -93,15 +108,15 @@ export default {
                   userID: this.userID,
                   usertype: this.usertype
                 },
-            }).then(response =>{//查询账号失败的情况
+            }).then(response =>{
                 if(response.data.success){
                   this.userList = response.data.data
-                }else{
+                }else{//查询账号失败的情况
                   this.$message({
                   message:response.data.msg,
                   type:'warning'
                 })
-                this.userList = [] //查询失败后情况数据
+                this.userList = [] //查询失败后情数据清空
                 }
                 this.buttonDisabled = false
                 this.loading = false
@@ -110,7 +125,7 @@ export default {
                 this.loading = false
             })
         },
-        SearchUser(){
+        SearchUser(){//根据账号类型向后端请求账号查询
           if(this.usertype == ''){
             this.$message({
               message: '请选中账号类型',
@@ -123,8 +138,57 @@ export default {
 
         handleCurrentChange(currentRow){ //表格选择row后的触发事件，储存选中的行
             this.selectRow = currentRow
+        },
+
+        updateStatus(){//启用或者禁用账号
+          let user = this.selectRow
+          if(user.length === 1){
+            if(user[0].isdelete === 1){//若账号处于禁用状态，则变更为启用
+              user[0].isdelete = 0
+            }else{//账号变更为禁用
+              user[0].isdelete = 1
+            }
+            request({
+              url: '/system/updateStatus',
+              responseType: 'json',
+              data: user[0],
+              method: 'post'
+            }).then(res =>{
+              this.$message(res.data.msg)
+            })
+          }else{
+            this.$message('禁用/启用账号只能单个操作')
+          }
+
+        },
+
+        SizeChange(val){//更新每页展示数据量
+          console.log(val)
+          this.pagesize = val
+        },
+
+        PageChange(val){//更新当前页的页码
+          console.log(val)
+          this.currentPage = val
+        },
+
+
+  },
+  computed:{
+    showList(){//当前页展示的数据
+        let list = []
+        if(this.userList.length>0){
+          let start = this.pagesize * (this.currentPage - 1)
+          let end = start+this.pagesize
+          for(let i = start; i<end ; i++ ){
+            list.push(this.userList[i])
+          }
+          return list
+        }else{
+          return list
         }
 
+    }
   },
   mounted(){
         
@@ -140,6 +204,12 @@ export default {
 }
 .module-height{
   height: 100px;
+}
+.page{
+  margin-top: 20px;
+  /* border: 1px solid black; */
+  padding: 10px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
 }
 </style>
 
