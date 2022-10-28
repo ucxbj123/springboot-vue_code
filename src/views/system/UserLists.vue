@@ -37,7 +37,9 @@
 
     <!-- 表格内容-->
     <el-row  v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" >
-        <el-table :data="userList" style="width:100%" stripe border highlight-current-row @selection-change="handleCurrentChange">
+        <el-table :data="showList" style="width:100%" stripe border highlight-current-row @selection-change="handleCurrentChange">
+            <!-- 自定义索引 index可以是number可以是function返回一个number-->
+            <el-table-column type="index" :index="indexMethod"></el-table-column>
             <el-table-column type="selection" ></el-table-column>
             <el-table-column prop="userID" label="账号" ></el-table-column>
             <el-table-column prop="name" label="姓名"></el-table-column>
@@ -45,7 +47,7 @@
             <el-table-column prop="email" label="邮箱"></el-table-column>
             <el-table-column prop="telephone" label="电话"></el-table-column>
             <el-table-column prop="address" label="地址"></el-table-column>
-            <el-table-column prop="isdelete" label="状态">
+            <el-table-column label="状态">
               <!-- 自定义内容-->
               <template slot-scope="scope">
                 <el-tag effect="dark" type="success" v-if="scope.row.isdelete < 1">启用</el-tag>
@@ -61,7 +63,7 @@
         @size-change="SizeChange"
         @current-change="PageChange"
         :current-page="currentPage"
-        :page-sizes="[10, 1, 30, 40]"
+        :page-sizes="[10, 20, 30, 40]"
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
         :total="userList.length">
@@ -73,6 +75,7 @@
 <script>
 
 import request from '@/utils/request'
+import { pageList } from '@/utils/validate'
 
 export default {
   name: 'UserLists',
@@ -163,31 +166,23 @@ export default {
         },
 
         SizeChange(val){//更新每页展示数据量
-          console.log(val)
           this.pagesize = val
         },
 
         PageChange(val){//更新当前页的页码
-          console.log(val)
           this.currentPage = val
         },
+        indexMethod(index){//自定义索引
+          //因为index默认从0开始，需要+1
+          return index + 1 + (this.pagesize * (this.currentPage - 1))
+        }
 
 
   },
   computed:{
     showList(){//当前页展示的数据
-        let list = []
-        if(this.userList.length>0){
-          let start = this.pagesize * (this.currentPage - 1)
-          let end = start+this.pagesize
-          for(let i = start; i<end ; i++ ){
-            list.push(this.userList[i])
-          }
-          return list
-        }else{
-          return list
-        }
-
+      //根据ElementUI分页组件编写的分页方法
+      return pageList(this.pagesize, this.currentPage, this.userList)
     }
   },
   mounted(){

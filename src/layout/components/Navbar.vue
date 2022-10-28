@@ -127,8 +127,10 @@ export default {
           type:response.data.status
         })
         this.centerDialogVisible = false
-        //成功修改密码后更新前端的token
-        this.$store.dispatch('user/updateToken', response.data.token)
+        if(response.data.status == 'success'){
+          //成功修改密码后更新前端的token
+          this.$store.dispatch('user/updateToken', response.data.token)
+        }       
       })
     },
 
