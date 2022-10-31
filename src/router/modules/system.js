@@ -6,13 +6,14 @@ const systemRouter =
         path: '/system',
         name: 'System',
         component: Layout,
-        meta: { title: '系统管理', icon: 'el-icon-s-home', roles: ['admin'] },
+        alwaysShow: true ,
+        meta: { title: '系统管理', icon: '系统管理', roles: ['admin'] },
         children:[
             {
                 path: 'userLists',
                 name: 'UserLists',
                 component: () => import('@/views/system/UserLists.vue'),
-                meta: { title: '系统用户管理', icon: 'peoples' ,roles: ['admin']}
+                meta: { title: '系统用户管理', icon: '用户设置' ,roles: ['admin']}
             }
         ]
     }
