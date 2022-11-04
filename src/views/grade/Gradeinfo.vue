@@ -10,7 +10,7 @@
         年级编号 <el-input class="inputwidth"  v-model="gno" placeholder="请输入年级编号"  ></el-input>
       </el-col>
       <el-col :span="6" :offset="1">
-        <el-button type="primary" icon="el-icon-search" @click.native="Search" >搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click.native="SearchButton(pagesize,currentPage)" >搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" @click.native="Reset" >重置</el-button>
       </el-col>
     </el-row>
@@ -43,7 +43,7 @@
         @size-change="SizeChange"
         @current-change="PageChange"
         :current-page="currentPage"
-        :page-sizes="[10, 20, 30, 40]"
+        :page-sizes="[10, 2, 30, 40]"
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
@@ -67,6 +67,7 @@ export default {
       currentPage: 1, //默认当前分页是第1页
       pagesize: 10, //每页展示多少条数据，默认是10
       total: 0, //总的记录数，未查询时为0
+      FirstSearch: true, //是否是第一次使用查询功能。true：pagesize与currentPage的改变不会触发查询功能;false：每次改变pagesize与currentPage都会触发查询功能，向后台请求数据
 
     }
   },
@@ -93,8 +94,13 @@ export default {
             this.gno = ''
         },
 
-        Search(){//搜索年级信息
-            const pagedate = { gno: this.gno, name: this.name, pagesize: this.pagesize, currentPage: this.currentPage }
+        SearchButton(pagesize2,currentPage2){
+          this.Search(pagesize2,currentPage2)
+          this.FirstSearch = false //第一次执行查询功能后设为false
+        },
+
+        Search(pagesize2,currentPage2){//搜索年级信息
+            const pagedate = { gno: this.gno, name: this.name, pagesize: pagesize2, currentPage: currentPage2 }
             getPage(pagedate).then(response =>{
                 this.userList = response.data.data.grades
                 this.total = response.data.data.total
@@ -104,6 +110,17 @@ export default {
 
 
   },
+
+  watch:{
+    pagesize(newvalue){
+      if(this.FirstSearch) {return}
+      this.Search(newvalue,this.currentPage)
+    },
+    currentPage(newvalue){
+      if(this.FirstSearch) {return}
+      this.Search(this.pagesize,newvalue)
+    }
+  }
 }
 </script>
 
