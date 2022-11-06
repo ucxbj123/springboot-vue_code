@@ -144,7 +144,7 @@ export default {
         },
 
         updateStatus(){//启用或者禁用账号
-          let user = this.selectRow
+          let user = JSON.parse(JSON.stringify(this.selectRow)) //进行深拷贝，避免操作同一数据
           if(user.length === 1){
             if(user[0].isdelete === 1){//若账号处于禁用状态，则变更为启用
               user[0].isdelete = 0

@@ -16,8 +16,8 @@
     </el-row>
 
     <el-row class="buttonMenu">
-        <el-button type="primary" size="small" icon="el-icon-plus" plain round>添加</el-button>
-        <el-button type="primary" size="small" icon="el-icon-edit" plain round>修改</el-button>
+        <el-button type="primary" size="small" icon="el-icon-plus" plain round @click.native="insertGrade">添加</el-button>
+        <el-button type="primary" size="small" icon="el-icon-edit" plain round @click.native="updateGrade">修改</el-button>
         <el-button type="primary" size="small" icon="el-icon-delete" plain round>删除</el-button>
         <el-button type="primary" size="small" icon="el-icon-download" plain round>导出</el-button>
     </el-row>
@@ -36,6 +36,7 @@
             <el-table-column prop="introducation" label="年级简介"></el-table-column>
         </el-table>
     </el-row>
+    
 
     <!-- 分页功能-->
     <el-row class="page" >
@@ -43,20 +44,26 @@
         @size-change="SizeChange"
         @current-change="PageChange"
         :current-page="currentPage"
-        :page-sizes="[10, 2, 30, 40]"
+        :page-sizes="[10, 1, 30, 40]"
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
       </el-pagination>
     </el-row>
+    <!-- 弹出，执行添加、修改年级-->
+    <grade-dialog  :open="opendialog" :title="titledialog" :business="typedialog" :gradeRow="selectRow" @close = "closeDialog" />
   </div>
 </template>
 
 <script>
 import { getPage } from '@/api/grade'
+import GradeDialog from './GradeDialog.vue'
 
 export default {
   name: 'Gradeinfo',
+  components:{
+    GradeDialog,
+  },
   data() {
     return {
       userList:[],//后端返回的用户数据
@@ -68,6 +75,10 @@ export default {
       pagesize: 10, //每页展示多少条数据，默认是10
       total: 0, //总的记录数，未查询时为0
       FirstSearch: true, //是否是第一次使用查询功能。true：pagesize与currentPage的改变不会触发查询功能;false：每次改变pagesize与currentPage都会触发查询功能，向后台请求数据
+      opendialog: false,  //打开弹窗开关
+      titledialog: '',    //弹窗主题
+      typedialog: '',     //执行操作的类型
+
 
     }
   },
@@ -106,8 +117,36 @@ export default {
                 this.total = response.data.data.total
                 console.log(response.data)
             })
-        }
+        },
 
+        insertGrade(){  //添加年级信息
+          this.titledialog = '新增年级信息'
+          this.typedialog = 'insert'
+          this.opendialog = true
+        },
+
+        updateGrade(){//修改年级信息
+          if(this.selectRow.length <= 0){
+            this.$message({
+              message:'请选择需要修改的年级记录',
+              type: 'info'
+            })
+            return
+          }else if(this.selectRow.length > 1){
+            this.$message({
+              message:'只能选项一条记录',
+              type:'info'
+            })
+            return
+          }
+          this.titledialog = '修改年级信息'
+          this.typedialog = 'update'
+          this.opendialog = true
+        },
+
+        closeDialog(){//关闭弹窗
+          this.opendialog = false
+        }
 
   },
 
