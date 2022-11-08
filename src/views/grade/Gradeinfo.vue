@@ -4,10 +4,10 @@
     <el-row class="module-height" :gutter="20">
       <!-- 年级-->
       <el-col :span="6">
-        年级 <el-input class="inputwidth"  v-model="name" placeholder="请输入年级名称"></el-input>
+        年级编号 <el-input class="inputwidth"  v-model="gno" placeholder="请输入年级编号"></el-input>
       </el-col>
       <el-col :span="6">
-        年级编号 <el-input class="inputwidth"  v-model="gno" placeholder="请输入年级编号"  ></el-input>
+        年级 <el-input class="inputwidth"  v-model="name" placeholder="请输入年级名称"  ></el-input>
       </el-col>
       <el-col :span="6" :offset="1">
         <el-button type="primary" icon="el-icon-search" @click.native="SearchButton(pagesize,currentPage)" >搜索</el-button>
@@ -18,7 +18,7 @@
     <el-row class="buttonMenu">
         <el-button type="primary" size="small" icon="el-icon-plus" plain round @click.native="insertGrade">添加</el-button>
         <el-button type="primary" size="small" icon="el-icon-edit" plain round @click.native="updateGrade">修改</el-button>
-        <el-button type="primary" size="small" icon="el-icon-delete" plain round>删除</el-button>
+        <el-button type="primary" size="small" icon="el-icon-delete" plain round @click.native="DeleteGrade">删除</el-button>
         <el-button type="primary" size="small" icon="el-icon-download" plain round>导出</el-button>
     </el-row>
 
@@ -58,6 +58,7 @@
 <script>
 import { getPage } from '@/api/grade'
 import GradeDialog from './GradeDialog.vue'
+import { deleteGrade } from '@/api/grade'
 
 export default {
   name: 'Gradeinfo',
@@ -146,6 +147,44 @@ export default {
 
         closeDialog(){//关闭弹窗
           this.opendialog = false
+        },
+
+        DeleteGrade(){//删除年级信息
+          if(this.selectRow.length <= 0){
+            this.$message({
+              message:'请选择需要删除的年级记录',
+              type: 'info'
+            })
+            return
+          }else if(this.selectRow.length > 1){
+            this.$message({
+              message:'只能选项一条记录',
+              type:'info'
+            })
+            return
+          }
+          //用户再次确定是否删除
+          this.$confirm('此操作将删除用户, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteGrade(this.selectRow[0]).then(response => {
+            const res = response.data
+            if(res.success){
+              this.$message({
+                  message: res.msg,
+                  type: 'success'
+              })
+              this.closeDialog()
+            }else{
+              this.$message({
+                  message: res.msg,
+                  type: 'error'
+              })
+            }})
+          })
+          
         }
 
   },

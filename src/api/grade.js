@@ -19,10 +19,52 @@ export function getPage(data) {
  * 获取所有老师信息
  * @returns 
  */
-export function getTeacher(){
+export function getTeachers(){
   return request({
-    url: '',
-    method: 'get',
+    url: '/teacher/getTeachers',
+    method: 'post',
     responseType: 'json'
+  })
+}
+
+/**
+ * 
+ * @param {JSON} data 年级信息info 添加新的年级信息
+ * @returns 
+ */
+export function insertGrade(data){
+  return request({
+    url: '/grade/insertGrade',
+    method: 'post',
+    responseType: 'json',
+    data
+  })
+}
+
+/**
+ * 
+ * @param {JSON} data 年级信息info 修改年级信息
+ * @returns 
+ */
+export function updateGrade(data){
+  return request({
+    url: '/grade/updateGrade',
+    method: 'post',
+    responseType: 'json',
+    data
+  })
+}
+
+/**
+ * 
+ * @param {JSON} data 年级信息info 删除年级信息
+ * @returns 
+ */
+ export function deleteGrade(data){
+  return request({
+    url: '/grade/deleteGrade',
+    method: 'post',
+    responseType: 'json',
+    data
   })
 }
