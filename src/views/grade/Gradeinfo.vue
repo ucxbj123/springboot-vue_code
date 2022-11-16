@@ -19,12 +19,13 @@
         <el-button type="primary" size="small" icon="el-icon-plus" plain round @click.native="insertGrade">添加</el-button>
         <el-button type="primary" size="small" icon="el-icon-edit" plain round @click.native="updateGrade">修改</el-button>
         <el-button type="primary" size="small" icon="el-icon-delete" plain round @click.native="DeleteGrade">删除</el-button>
-        <el-button type="primary" size="small" icon="el-icon-download" plain round>导出</el-button>
+        <el-button type="primary" size="small" icon="el-icon-download" plain round @click.native="ExportExcel">导出</el-button>
     </el-row>
 
     <!-- 表格内容-->
-    <el-row  v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" >
-        <el-table :data="userList" style="width:100%" stripe border highlight-current-row @selection-change="handleCurrentChange">
+    <el-row  v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0)">
+        <el-table :data="userList" style="width:100%" stripe border highlight-current-row @selection-change="handleCurrentChange" >
             <!-- 自定义索引 index可以是number可以是function返回一个number-->
             <el-table-column type="index" :index="indexMethod"></el-table-column>
             <el-table-column type="selection" ></el-table-column>
@@ -58,7 +59,7 @@
 <script>
 import { getPage } from '@/api/grade'
 import GradeDialog from './GradeDialog.vue'
-import { deleteGrade } from '@/api/grade'
+import { deleteGrade, exportExcel } from '@/api/grade'
 
 export default {
   name: 'Gradeinfo',
@@ -112,11 +113,14 @@ export default {
         },
 
         Search(pagesize2,currentPage2){//搜索年级信息
+            this.loading = true
             const pagedate = { gno: this.gno, name: this.name, pagesize: pagesize2, currentPage: currentPage2 }
             getPage(pagedate).then(response =>{
                 this.userList = response.data.data.grades
                 this.total = response.data.data.total
-                console.log(response.data)
+                this.loading = false
+            }).catch(error => {
+                this.loading = false
             })
         },
 
@@ -185,6 +189,30 @@ export default {
             }})
           })
           
+        },
+
+        ExportExcel(){
+          exportExcel(this.userList).then(res =>{
+            const content = res.data;
+            const blob = new Blob([content]);
+            let url = window.URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.style.display = "none";
+            link.href = url;
+            link.setAttribute(
+              "download",
+              decodeURI(res.headers["content-disposition"].split("=")[1])
+            );
+            document.body.appendChild(link);
+            link.click()
+            //释放资源
+            window.URL.revokeObjectURL(url)
+          }).catch(error => {
+            this.$message({
+              message: error,
+              type: 'error'
+            })
+          })
         }
 
   },

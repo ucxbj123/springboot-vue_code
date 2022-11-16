@@ -1,4 +1,14 @@
+//封装了请求头与响应拦截，一般使用这个
 import request from '@/utils/request'
+
+import requestv2 from '@/utils/requestv2'
+
+//处理一些不需要进行权限拦截或者返回状态拦截的请求，使用原始的axios。例如文件下载
+import axios from 'axios'
+
+//获取Cookies中的的token信息
+import { getToken } from '@/utils/auth'
+
 
 
 /**
@@ -33,7 +43,7 @@ export function getTeachers(){
  * @returns 
  */
 export function insertGrade(data){
-  return request({
+  return ({
     url: '/grade/insertGrade',
     method: 'post',
     responseType: 'json',
@@ -65,6 +75,24 @@ export function updateGrade(data){
     url: '/grade/deleteGrade',
     method: 'post',
     responseType: 'json',
+    data
+  })
+}
+
+
+
+/**
+ * 
+ * @param {Array} data 年级信息info列表，导出excel功能
+ * @returns 
+ */
+ export function exportExcel(data){
+  //获取token，后端需要进行验证
+  const token = getToken()
+  return requestv2({
+    url: '/grade/download',
+    method: 'post',
+    responseType: 'blob',
     data
   })
 }
