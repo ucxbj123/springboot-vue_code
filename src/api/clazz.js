@@ -12,13 +12,13 @@ import { getToken } from '@/utils/auth'
 
 
 /**
- * @param {JSON} data JSON包含当前页、每页显示的数据、年级名称、年级编号
+ * @param {JSON} data JSON包含当前页、每页显示的数据、班级名称、班级编号
  * 分页功能：通过向后端传输分页参数与查询的字段，获取分页的数据（分页功能由后端完成）
  * 注意：系统用户管理模块是获取匹配条件的数据，在前端完成分页功能
  */
 export function getPage(data) {
   return request({
-    url: '/grade/getPage',
+    url: '/clazz/getPage',
     method: 'post',
     responseType:'json',
     data
@@ -38,27 +38,25 @@ export function getTeachers(){
 }
 
 /**
- * 
- * @param {JSON} data 年级信息info 添加新的年级信息
- * @returns 
+ * 获取所有年级信息
  */
-export function insertGrade(data){
-  return ({
-    url: '/grade/insertGrade',
-    method: 'post',
-    responseType: 'json',
-    data
-  })
+export function getGrades(){
+    return request({
+        url: '/grade/getGrades',
+        method: 'post',
+        responseType: 'json',
+        data:{}
+    })
 }
 
 /**
  * 
- * @param {JSON} data 年级信息info 修改年级信息
+ * @param {JSON} data 班级信息info 添加新的班级信息
  * @returns 
  */
-export function updateGrade(data){
+export function insertClazz(data){
   return request({
-    url: '/grade/updateGrade',
+    url: '/clazz/insertClazz',
     method: 'post',
     responseType: 'json',
     data
@@ -67,12 +65,26 @@ export function updateGrade(data){
 
 /**
  * 
- * @param {JSON} data 年级信息info 删除年级信息
+ * @param {JSON} data 班级信息info 修改班级信息
  * @returns 
  */
- export function deleteGrade(data){
+export function updateClazz(data){
   return request({
-    url: '/grade/deleteGrade',
+    url: '/clazz/updateClazz',
+    method: 'post',
+    responseType: 'json',
+    data
+  })
+}
+
+/**
+ * 
+ * @param {JSON} data 班级信息info 删除班级信息
+ * @returns 
+ */
+ export function deleteClazz(data){
+  return request({
+    url: '/clazz/deleteClazz',
     method: 'post',
     responseType: 'json',
     data
@@ -83,14 +95,14 @@ export function updateGrade(data){
 
 /**
  * 
- * @param {Array} data 年级信息info列表，导出excel功能
+ * @param {Array} data 班级级信息info列表，导出excel功能
  * @returns 
  */
  export function exportExcel(data){
   //获取token，后端需要进行验证
   const token = getToken()
   return requestv2({
-    url: '/grade/download',
+    url: '/clazz/download',
     method: 'post',
     responseType: 'blob',
     data

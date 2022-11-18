@@ -162,8 +162,8 @@ import { getTeachers, insertGrade, updateGrade } from '@/api/grade'
             },
 
             InsertGrade(){//添加年级新记录
-                if(this.gradeInfo.name == ''){
-                    this.$message('年级名称不能为空')
+                if(this.gradeInfo.name == '' || this.gradeInfo.gno == ''){
+                    this.$message('年级名称、编码不能为空')
                     return
                 }
                 insertGrade(this.gradeInfo).then(res => {

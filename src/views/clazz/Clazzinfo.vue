@@ -4,10 +4,10 @@
     <el-row class="module-height" :gutter="20">
       <!-- 年级-->
       <el-col :span="6">
-        年级编号 <el-input class="inputwidth"  v-model="gno" placeholder="请输入年级编号"></el-input>
+        班级编号 <el-input class="inputwidth"  v-model="cno" placeholder="请输入班级编号"></el-input>
       </el-col>
       <el-col :span="6">
-        年级 <el-input class="inputwidth"  v-model="name" placeholder="请输入年级名称"  ></el-input>
+        班级 <el-input class="inputwidth"  v-model="name" placeholder="请输入班级名称"  ></el-input>
       </el-col>
       <el-col :span="6" :offset="1">
         <el-button type="primary" icon="el-icon-search" @click.native="SearchButton(pagesize,currentPage)" >搜索</el-button>
@@ -18,7 +18,7 @@
     <el-row class="buttonMenu">
         <el-button type="primary" size="small" icon="el-icon-plus" plain round @click.native="insertGrade">添加</el-button>
         <el-button type="primary" size="small" icon="el-icon-edit" plain round @click.native="updateGrade">修改</el-button>
-        <el-button type="primary" size="small" icon="el-icon-delete" plain round @click.native="DeleteGrade">删除</el-button>
+        <el-button type="primary" size="small" icon="el-icon-delete" plain round @click.native="DeleteClazz">删除</el-button>
         <el-button type="primary" size="small" icon="el-icon-download" plain round @click.native="ExportExcel">导出</el-button>
     </el-row>
 
@@ -29,12 +29,14 @@
             <!-- 自定义索引 index可以是number可以是function返回一个number-->
             <el-table-column type="index" :index="indexMethod"></el-table-column>
             <el-table-column type="selection" ></el-table-column>
-            <el-table-column prop="gno" label="年级编码" ></el-table-column>
-            <el-table-column prop="name" label="年级名称"></el-table-column>
-            <el-table-column prop="manager" label="年级主任"></el-table-column>
-            <el-table-column prop="email" label="主任邮箱"></el-table-column>
-            <el-table-column prop="telephone" label="主任电话"></el-table-column>
-            <el-table-column prop="introducation" label="年级简介"></el-table-column>
+            <el-table-column prop="cno" label="班级编码" ></el-table-column>
+            <el-table-column prop="name" label="班级名称"></el-table-column>
+            <el-table-column prop="coordinator" label="班主任"></el-table-column>
+            <el-table-column prop="email" label="班主任邮箱"></el-table-column>
+            <el-table-column prop="telephone" label="班主任电话"></el-table-column>
+            <el-table-column prop="introducation" label="班级简介"></el-table-column>
+            <el-table-column prop="number" label="班级人数"></el-table-column>
+            <el-table-column prop="grade_name" label="所属年级"></el-table-column>
         </el-table>
     </el-row>
     
@@ -52,25 +54,25 @@
       </el-pagination>
     </el-row>
     <!-- 弹出，执行添加、修改年级-->
-    <grade-dialog  :open="opendialog" :title="titledialog" :business="typedialog" :gradeRow="selectRow" @close = "closeDialog" />
+    <clazz-dialog  :open="opendialog" :title="titledialog" :business="typedialog" :clazzeRow="selectRow" @close = "closeDialog" />
   </div>
 </template>
 
 <script>
-import { getPage } from '@/api/grade'
-import GradeDialog from './GradeDialog.vue'
-import { deleteGrade, exportExcel } from '@/api/grade'
+import { getPage } from '@/api/clazz'
+import ClazzDialog from './ClazzDialog.vue'
+import { deleteClazz, exportExcel } from '@/api/clazz'
 
 export default {
-  name: 'Gradeinfo',
+  name: 'Clazzinfo',
   components:{
-    GradeDialog,
+    ClazzDialog,
   },
   data() {
     return {
       userList:[],//后端返回的用户数据
-      name: '',//年级名称
-      gno: '', //年级编号
+      name: '',//班级名称
+      cno: '', //班级编号
       loading: false, //加载数据提示
       selectRow: [], //存储选中的用户值
       currentPage: 1, //默认当前分页是第1页
@@ -104,7 +106,7 @@ export default {
 
         Reset(){//重置输入框
             this.name = ''
-            this.gno = ''
+            this.cno = ''
         },
 
         SearchButton(pagesize2,currentPage2){
@@ -112,11 +114,11 @@ export default {
           this.FirstSearch = false //第一次执行查询功能后设为false
         },
 
-        Search(pagesize2,currentPage2){//搜索年级信息
+        Search(pagesize2,currentPage2){//搜索班级信息
             this.loading = true
-            const pagedate = { gno: this.gno, name: this.name, pagesize: pagesize2, currentPage: currentPage2 }
+            const pagedate = { cno: this.cno, name: this.name, pagesize: pagesize2, currentPage: currentPage2 }
             getPage(pagedate).then(response =>{
-                this.userList = response.data.data.grades
+                this.userList = response.data.data.clazz
                 this.total = response.data.data.total
                 this.loading = false
             }).catch(error => {
@@ -124,16 +126,16 @@ export default {
             })
         },
 
-        insertGrade(){  //添加年级信息
-          this.titledialog = '新增年级信息'
+        insertGrade(){  //添加班级信息
+          this.titledialog = '新增班级信息'
           this.typedialog = 'insert'
           this.opendialog = true
         },
 
-        updateGrade(){//修改年级信息
+        updateGrade(){//修改班级信息
           if(this.selectRow.length <= 0){
             this.$message({
-              message:'请选择需要修改的年级记录',
+              message:'请选择需要修改的班级记录',
               type: 'info'
             })
             return
@@ -144,7 +146,7 @@ export default {
             })
             return
           }
-          this.titledialog = '修改年级信息'
+          this.titledialog = '修改班级信息'
           this.typedialog = 'update'
           this.opendialog = true
         },
@@ -153,10 +155,10 @@ export default {
           this.opendialog = false
         },
 
-        DeleteGrade(){//删除年级信息
+        DeleteClazz(){//删除班级信息
           if(this.selectRow.length <= 0){
             this.$message({
-              message:'请选择需要删除的年级记录',
+              message:'请选择需要删除的班级记录',
               type: 'info'
             })
             return
@@ -168,12 +170,12 @@ export default {
             return
           }
           //用户再次确定是否删除
-          this.$confirm('此操作将删除用户, 是否继续?', '提示', {
+          this.$confirm('此操作将删除该班级, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            deleteGrade(this.selectRow[0]).then(response => {
+            deleteClazz(this.selectRow[0]).then(response => {
             const res = response.data
             if(res.success){
               this.$message({

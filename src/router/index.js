@@ -4,6 +4,7 @@ import studentsRouter from '@/router/modules/students'
 import teacherRouter from '@/router/modules/teacher'
 import systemRouter from '@/router/modules/system'
 import gradeRouter from '@/router/modules/grade'
+import clazzRouter from '@/router/modules/clazz'
 
 Vue.use(Router)
 
@@ -197,6 +198,7 @@ export const asyncRoutes = [
   teacherRouter,
   studentsRouter,
   gradeRouter,
+  clazzRouter,
 
   {
     path: '/icon',
