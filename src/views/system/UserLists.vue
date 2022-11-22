@@ -26,10 +26,10 @@
             <el-button type="primary" icon="el-icon-s-fold">操作</el-button>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item icon="el-icon-plus">添加账号</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-plus" @click.native="inserUser">添加账号</el-dropdown-item>
             <el-dropdown-item icon="el-icon-circle-plus" @click.native="updateStatus">禁用/启用账号</el-dropdown-item>
-            <el-dropdown-item ><svg-icon icon-class="查看" /> 查看账号</el-dropdown-item>
-            <el-dropdown-item icon="el-icon-delete">删除账号</el-dropdown-item>
+            <el-dropdown-item @click.native="updateUser" ><svg-icon icon-class="查看" /> 修改账号</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-delete" @click.native="deleteUserOne">删除账号</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -69,6 +69,9 @@
         :total="userList.length">
       </el-pagination>
     </el-row>
+
+    <user-dialog :open="opendialog" :title="titledialog" :business="typedialog" :Row="selectRow" @close = "closeDialog" />
+
   </div>
 </template>
 
@@ -76,9 +79,14 @@
 
 import request from '@/utils/request'
 import { pageList } from '@/utils/validate'
+import UserDialog from './UserDialog.vue'
+import { deleteUser } from '@/api/system'
 
 export default {
   name: 'UserLists',
+  components:{
+    UserDialog
+  },
   data() {
     return {
       userList:[],//后端返回的用户数据
@@ -95,6 +103,9 @@ export default {
       selectRow: [], //存储选中的用户值
       currentPage: 1, //默认当前分页是第1页
       pagesize: 100, //每页展示多少条数据，默认是100
+      opendialog: false,  //打开弹窗开关
+      titledialog: '',    //弹窗主题
+      typedialog: '',     //执行操作的类型
 
     }
   },
@@ -175,6 +186,71 @@ export default {
         indexMethod(index){//自定义索引
           //因为index默认从0开始，需要+1
           return index + 1 + (this.pagesize * (this.currentPage - 1))
+        },
+        closeDialog(){//关闭弹窗
+          this.opendialog = false
+        },
+
+        inserUser(){
+          this.titledialog = '添加用户'
+          this.typedialog = 'insert'
+          this.opendialog = true
+        },
+
+        updateUser(){
+          if(this.selectRow.length <= 0){
+            this.$message({
+              message:'请选择需要修改的账号',
+              type: 'info'
+            })
+            return
+          }else if(this.selectRow.length > 1){
+            this.$message({
+              message:'只能选项一条信息',
+              type:'info'
+            })
+            return
+          }
+          this.titledialog = '修改用户信息'
+          this.typedialog = 'update'
+          this.opendialog = true
+        },
+        deleteUserOne(){//删除单个用户
+          if(this.selectRow.length <= 0){
+            this.$message({
+              message:'请选择需要删除的账号记录',
+              type: 'info'
+            })
+            return
+          }else if(this.selectRow.length > 1){
+            this.$message({
+              message:'只能选项一条记录',
+              type:'info'
+            })
+            return
+          }
+          //用户再次确定是否删除
+          this.$confirm('此操作将删除该账号, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            deleteUser(this.selectRow[0]).then(response => {
+            const res = response.data
+            if(res.success){
+              this.$message({
+                  message: res.msg,
+                  type: 'success'
+              })
+              this.closeDialog()
+            }else{
+              this.$message({
+                  message: res.msg,
+                  type: 'error'
+              })
+            }})
+          })
+
         }
 
 

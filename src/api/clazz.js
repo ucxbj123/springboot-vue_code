@@ -99,8 +99,6 @@ export function updateClazz(data){
  * @returns 
  */
  export function exportExcel(data){
-  //获取token，后端需要进行验证
-  const token = getToken()
   return requestv2({
     url: '/clazz/download',
     method: 'post',

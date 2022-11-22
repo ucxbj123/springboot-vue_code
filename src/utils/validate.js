@@ -47,3 +47,24 @@ export function validUsername(str) {
     return list
   }
 }
+
+
+/**
+ * @param {Blob} 
+ * 导出excel功能
+ */
+ export function exportExcel(blob) {
+  let url = window.URL.createObjectURL(blob);
+  let link = document.createElement("a");
+  link.style.display = "none";
+  link.href = url;
+  link.setAttribute(
+    "download",
+    decodeURI(res.headers["content-disposition"].split("=")[1])
+  );
+  document.body.appendChild(link);
+  link.click()
+  //释放资源
+  window.URL.revokeObjectURL(url)
+  document.body.removeChild(link)
+}

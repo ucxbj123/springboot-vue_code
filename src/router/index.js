@@ -38,7 +38,7 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  * 
- *  hidden：如果设置为true，该路径不会在Layout的菜单栏显示，只获取hdiden为false的路径
+ *  hidden：如果设置为true，该路径不会在Layout的菜单栏显示，只获取hdiden为false的路径，该属性也可以用在子路由，同样生效
  *  meta: { title: '', icon: '' } ：Layout的菜单栏根据meta属性进行动态设置图标和主题，图标可以设置elementui和svg的图标
  * breadcrumb: false：如果设置为false, 标签栏将不会显示当前页面路径
  */

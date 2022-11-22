@@ -41,7 +41,7 @@
             <!-- 底部的按钮-->
             <span slot="footer">
                 <el-button @click.native="closeDialog">取 消</el-button>
-                <el-button type="primary" @click.native="InsertGrade" >添 加</el-button>
+                <el-button type="primary" @click.native="InsertGradeOne" >添 加</el-button>
             </span>
         </el-dialog>
 
@@ -161,7 +161,7 @@ import { getTeachers, insertGrade, updateGrade } from '@/api/grade'
                 })
             },
 
-            InsertGrade(){//添加年级新记录
+            InsertGradeOne(){//添加年级新记录
                 if(this.gradeInfo.name == '' || this.gradeInfo.gno == ''){
                     this.$message('年级名称、编码不能为空')
                     return

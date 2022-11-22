@@ -43,7 +43,7 @@ export function getTeachers(){
  * @returns 
  */
 export function insertGrade(data){
-  return ({
+  return request({
     url: '/grade/insertGrade',
     method: 'post',
     responseType: 'json',
@@ -87,8 +87,6 @@ export function updateGrade(data){
  * @returns 
  */
  export function exportExcel(data){
-  //获取token，后端需要进行验证
-  const token = getToken()
   return requestv2({
     url: '/grade/download',
     method: 'post',
