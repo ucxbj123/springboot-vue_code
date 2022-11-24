@@ -248,6 +248,16 @@ import { getTeachers, insertClazz, updateClazz, getGrades } from '@/api/clazz'
             ChangeValue(value){//下拉框选中触发的事件
                 this.clazzInfo.grade_name = value.name
                 this.clazzInfo.gno = value.gno
+            },
+            reset(){
+                this.clazzInfo.name = ''
+                this.clazzInfo.gno = ''
+                this.clazzInfo.coordinator = ''
+                this.clazzInfo.telephone = ''
+                this.clazzInfo.email = ''
+                this.clazzInfo.introducation = ''
+                this.clazzInfo.grade_name = ''
+                this.clazzInfo.cno = ''
             }
 
         },
@@ -259,14 +269,7 @@ import { getTeachers, insertClazz, updateClazz, getGrades } from '@/api/clazz'
                         var info = JSON.parse(JSON.stringify(this.clazzeRow[0])) //解决父组件数据跟着变化的问题
                         this.clazzInfo = info
                     }else{
-                        this.clazzInfo.name = ''
-                        this.clazzInfo.gno = ''
-                        this.clazzInfo.coordinator = ''
-                        this.clazzInfo.telephone = ''
-                        this.clazzInfo.email = ''
-                        this.clazzInfo.introducation = ''
-                        this.clazzInfo.grade_name = ''
-                        this.clazzInfo.cno = ''
+                        this.reset()
                     }
                 }
             },
@@ -275,14 +278,7 @@ import { getTeachers, insertClazz, updateClazz, getGrades } from '@/api/clazz'
                     var info = JSON.parse(JSON.stringify(newvalue)) //解决父组件数据跟着变化的问题
                     this.clazzInfo = info
                 }else{
-                    this.clazzInfo.name = ''
-                    this.clazzInfo.gno = ''
-                    this.clazzInfo.coordinator = ''
-                    this.clazzInfo.telephone = ''
-                    this.clazzInfo.email = ''
-                    this.clazzInfo.introducation = ''
-                    this.clazzInfo.grade_name = ''
-                    this.clazzInfo.cno = ''
+                    this.reset()
                 }
             }
         },

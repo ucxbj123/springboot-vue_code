@@ -204,6 +204,15 @@ import { getTeachers, insertGrade, updateGrade } from '@/api/grade'
                 })
             },
 
+            reset(){//重置
+                this.gradeInfo.name = ''
+                this.gradeInfo.gno = ''
+                this.gradeInfo.manager = ''
+                this.gradeInfo.telephone = ''
+                this.gradeInfo.email = ''
+                this.gradeInfo.introducation = ''
+            }
+
         },
         watch:{
             business:{//监视business的类型进行信息变更
@@ -213,12 +222,7 @@ import { getTeachers, insertGrade, updateGrade } from '@/api/grade'
                         var info = JSON.parse(JSON.stringify(this.gradeRow[0])) //解决父组件数据跟着变化的问题
                         this.gradeInfo = info
                     }else{
-                        this.gradeInfo.name = ''
-                        this.gradeInfo.gno = ''
-                        this.gradeInfo.manager = ''
-                        this.gradeInfo.telephone = ''
-                        this.gradeInfo.email = ''
-                        this.gradeInfo.introducation = ''
+                        this.reset()
                     }
                 }
             },
@@ -227,12 +231,7 @@ import { getTeachers, insertGrade, updateGrade } from '@/api/grade'
                     var info = JSON.parse(JSON.stringify(newvalue)) //解决父组件数据跟着变化的问题
                     this.gradeInfo = info
                 }else{
-                    this.gradeInfo.name = ''
-                    this.gradeInfo.gno = ''
-                    this.gradeInfo.manager = ''
-                    this.gradeInfo.telephone = ''
-                    this.gradeInfo.email = ''
-                    this.gradeInfo.introducation = ''
+                    this.reset()
                 }
             }
         },

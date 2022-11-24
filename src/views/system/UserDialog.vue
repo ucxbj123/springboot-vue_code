@@ -62,7 +62,7 @@
                 </el-col>
             </el-row>
             <el-row class="el">
-                <el-col>账号    <el-input class="inputwidth" v-model="userinfo.userID" placeholder="请输入账号"></el-input></el-col>
+                <el-col>账号    <el-input class="inputwidth" v-model="userinfo.userID" placeholder="请输入账号" disabled></el-input></el-col>
             </el-row>
             <el-row class="el">
                 <el-col>姓名    <el-input class="inputwidth" v-model="userinfo.name" placeholder="请输入姓名" ></el-input></el-col>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { insertUser } from '@/api/system'
+import { insertUser, updateUser } from '@/api/system'
 
     export default {
         name:'UserDialog',
@@ -144,10 +144,8 @@ import { insertUser } from '@/api/system'
             closeDialog(){
                 //关闭dialog就清数据
                 if(this.business == 'insert'){
-                    this.clazzInfo = {}
+                    this.userinfo = {}
                 }
-                //清空选择器的值，否则重新打开会直接显示
-                this.SelectGrade = {}
                 this.$emit('close')
             },
             InsertUserOne(){//添加账号
@@ -159,7 +157,10 @@ import { insertUser } from '@/api/system'
                     this.$message('密码不能为空')
                     return
                 }
-                insertUser(this.userinfo).then(response => {
+                //只获取需要的属性，不然会影响添加功能
+                let info = this.getUserinfo()
+
+                insertUser(info).then(response => {
                     const da = response.data
                     if(da.success){
                         this.$message({
@@ -178,7 +179,46 @@ import { insertUser } from '@/api/system'
             },
 
             UpdateUsers(){//修改账号信息
+                let info = this.getUserinfo()
+                updateUser(info).then(response => {
+                    const res = response.data
+                    console.log(res)
+                    if(res.success){
+                        this.$message({
+                            message: res.msg,
+                            type: 'success'
+                        })
+                        this.closeDialog()
+                    }else{
+                        this.$message({
+                            message: res.msg,
+                            type: 'error'
+                        })
+                    }
+                })
 
+            },
+            resetUserinfo(){//重置user的信息为空
+                this.userinfo.name = ''
+                this.userinfo.userID = ''
+                this.userinfo.telephone = ''
+                this.userinfo.address = ''
+                this.userinfo.email = ''
+                this.userinfo.gender = ''
+                this.userinfo.usertype = ''
+                this.userinfo.password = ''
+            },
+            getUserinfo(){
+                let info = {}
+                info.name = this.userinfo.name
+                info.userID = this.userinfo.userID
+                info.telephone = this.userinfo.telephone
+                info.address = this.userinfo.address
+                info.email = this.userinfo.email
+                info.gender = this.userinfo.gender
+                info.usertype = this.userinfo.usertype
+                info.password = this.userinfo.password
+                return info
             }
 
         },
@@ -191,13 +231,7 @@ import { insertUser } from '@/api/system'
                         this.userinfo = info
                         this.userinfo.password = ''
                     }else{
-                        this.userinfo.name = ''
-                        this.userinfo.userID = ''
-                        this.userinfo.telephone = ''
-                        this.userinfo.address = ''
-                        this.userinfo.email = ''
-                        this.userinfo.gender = ''
-                        this.userinfo.usertype = ''
+                        this.resetUserinfo()
                     }
                 }
             },
@@ -207,13 +241,7 @@ import { insertUser } from '@/api/system'
                     this.userinfo = info
                     this.userinfo.password = ''
                 }else{
-                    this.userinfo.name = ''
-                    this.userinfo.userID = ''
-                    this.userinfo.telephone = ''
-                    this.userinfo.address = ''
-                    this.userinfo.email = ''
-                    this.userinfo.gender = ''
-                    this.userinfo.usertype = ''
+                    this.resetUserinfo()
                 }
             }
         },
