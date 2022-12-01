@@ -9,7 +9,7 @@
                 <svg-icon icon-class="修改" /> {{title}}
             </template>
             <el-row class="el">
-                <el-col>账号    <el-input class="inputwidth" v-model="info.tno" placeholder="请输入账号" disabled></el-input></el-col>
+                <el-col>账号    <el-input class="inputwidth" v-model="info.sno" placeholder="请输入账号" disabled></el-input></el-col>
             </el-row>
             <el-row class="el">
                 <el-col>姓名    <el-input class="inputwidth" v-model="info.name" placeholder="请输入姓名" disabled></el-input></el-col>
@@ -42,7 +42,7 @@
 
 <script>
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
-import { updateTeacher } from '@/api/teacher'
+import { updateStudent } from '@/api/student'
 
     export default {
         name:'StudentDialog',
@@ -52,7 +52,7 @@ import { updateTeacher } from '@/api/teacher'
         data() {
             return {
                 info:{
-                    tno: '',
+                    sno: '',
                     name: '',
                     gender: '',
                     email: '',
@@ -71,7 +71,7 @@ import { updateTeacher } from '@/api/teacher'
                 type: Boolean,
                 default: false
             },
-            Row:{      //教师账号信息
+            Row:{      //学生账号信息
                 type: Array,
                 require: false
             }
@@ -84,7 +84,7 @@ import { updateTeacher } from '@/api/teacher'
 
             Updateinfo(){//修改账号信息
                 let info = this.getUserinfo()
-                updateTeacher(info).then(response => {
+                updateStudent(info).then(response => {
                     const res = response.data
                     if(res.success){
                         this.$message({
@@ -103,7 +103,7 @@ import { updateTeacher } from '@/api/teacher'
             },
             resetUserinfo(){//重置user的信息为空
                 this.info.name = ''
-                this.info.tno = ''
+                this.info.sno = ''
                 this.info.telephone = ''
                 this.info.address = ''
                 this.info.email = ''
@@ -113,7 +113,7 @@ import { updateTeacher } from '@/api/teacher'
                 let info2 = {}
                 info2.name = this.info.name
                 //后端的传参对象为userinfo
-                info2.userID = this.info.tno
+                info2.userID = this.info.sno
                 info2.telephone = this.info.telephone
                 info2.address = this.info.address
                 info2.email = this.info.email

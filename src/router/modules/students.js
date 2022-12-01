@@ -16,7 +16,7 @@ const studentsRouter =
             {
                 path: 'main',
                 name: 'studentmain',
-                component: () => import('@/views/student'),
+                component: () => import('@/views/student/main'),
                 meta: { title: '学生模块', icon: 'el-icon-user-solid',roles: ['student'] }
             },
             {
