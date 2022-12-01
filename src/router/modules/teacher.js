@@ -6,13 +6,14 @@ const teacherRouter =
         path: '/teacher',
         name: 'Teacher',
         component: Layout,
-        meta: { title: '教师主页', icon: 'el-icon-s-home', roles: ['teacher'] },
+        meta: { title: '教师管理', icon: 'el-icon-s-home', roles: ['teacher'] },
+        alwaysShow: true,
         children:[
             {
-                path: 'main',
-                name: 'Main',
-                component: () => import('@/views/teacher'),
-                meta: { title: '教师主页', icon: 'el-icon-s-home' }
+                path: 'Teachermain',
+                name: 'TeacherMain',
+                component: () => import('@/views/teacher/main'),
+                meta: { title: '教师信息', icon: '人员管理' },
             }
         ]
     }

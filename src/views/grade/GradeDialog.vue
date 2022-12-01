@@ -3,7 +3,7 @@
         <!-- 在本组件不推荐:visible.sync，因为.sync修饰符相当于触发dialog关闭回调，会将props的open设为false，但是props在子组件被修改是会报警告的
             解决方法：不使用修饰符，绑定关闭回调事件 :close="closeDialog"，触发父组件事件改变open值
         -->
-        <el-dialog :visible="open" v-if="business == 'insert'" width="30%" :close="closeDialog" :before-close="closeDialog">
+        <el-dialog :visible="open" v-if="business == 'insert'" width="30%" :close="closeDialog" :before-close="closeDialog" v-el-drag-dialog>
             <!-- 主题-->
             <template slot="title">
                 <svg-icon icon-class="新增" /> {{title}}
@@ -45,7 +45,7 @@
             </span>
         </el-dialog>
 
-        <el-dialog :visible="open" v-else-if="business == 'update'" width="30%" :close="closeDialog" :before-close="closeDialog" >
+        <el-dialog :visible="open" v-else-if="business == 'update'" width="30%" :close="closeDialog" :before-close="closeDialog" v-el-drag-dialog >
             <!-- 主题-->
             <template slot="title">
                 <svg-icon icon-class="修改" /> {{title}}
@@ -93,10 +93,14 @@
 <script>
 
 import { getTeachers, insertGrade, updateGrade } from '@/api/grade'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
 
     export default {
         name:'GradeDialog',
+        directives:{
+            elDragDialog
+        },
         data() {
             return {
                 gradeInfo:{

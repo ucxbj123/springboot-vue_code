@@ -51,7 +51,7 @@ export function validUsername(str) {
 
 /**
  * @param {Blob} 
- * 导出excel功能
+ * 导出excel功能：主要用于接收后端的文件流然后进行下载
  */
  export function exportExcel(blob) {
   let url = window.URL.createObjectURL(blob);
@@ -67,4 +67,20 @@ export function validUsername(str) {
   //释放资源
   window.URL.revokeObjectURL(url)
   document.body.removeChild(link)
+}
+
+
+/**
+ * @param {Array} filterVal ['id','name'] 需要下载的属性名
+ * @param {Array} jsonData [{id:1,name:'june',sex:'男'},{id:1,name:'lucy',sex:'女'}] 原始的数据，内包含对象；只会导出id,name的值
+ * 前端导出excel用于JSON数据字段的选取并格式化为table类型的数据进行导出
+ */
+export function formatJson(filterVal, jsonData) {
+  return jsonData.map(v => filterVal.map(j => {   //map() 方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值。
+    if (j === 'timestamp') {                      //map() 方法按照原始数组元素顺序依次处理元素
+      return parseTime(v[j])                      //总结：map方法主要就是改变原来每一个值的展示形式，整个的数据类型Array是没有改变的;map()内使用map()逆向梳理会比较好理解
+    } else {
+      return v[j]
+    }
+  }))
 }

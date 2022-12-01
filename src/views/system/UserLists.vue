@@ -30,6 +30,8 @@
             <el-dropdown-item icon="el-icon-circle-plus" @click.native="updateStatus">禁用/启用账号</el-dropdown-item>
             <el-dropdown-item @click.native="updateUser" ><svg-icon icon-class="查看" /> 修改账号</el-dropdown-item>
             <el-dropdown-item icon="el-icon-delete" @click.native="deleteUserOne">删除账号</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-download" @click.native="ExportExcel('xlsx')">导出excel</el-dropdown-item>
+            <el-dropdown-item icon="el-icon-download" @click.native="ExportExcel('csv')">导出csv</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -81,6 +83,7 @@ import request from '@/utils/request'
 import { pageList } from '@/utils/validate'
 import UserDialog from './UserDialog.vue'
 import { deleteUser } from '@/api/system'
+import { formatJson } from '@/utils/validate'
 
 export default {
   name: 'UserLists',
@@ -251,6 +254,22 @@ export default {
             }})
           })
 
+        },
+        //导出
+        ExportExcel(type){
+          import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['账号', '姓名', '性别', '邮箱', '电话', '住址', '状态']
+          const filterVal = ['userID', 'name', 'gender', 'email', 'telephone', 'address', 'isdelete' ]
+          const list = this.showList
+          const data = formatJson(filterVal, list)  //取filterVal中的值并构建成Array数据用于导出
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '账号',
+            autoWidth: true,
+            bookType: type,   //支持xlsx,csv,txt
+          })
+         })
         }
 
 

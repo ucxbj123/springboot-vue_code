@@ -3,7 +3,7 @@
         <!-- 在本组件不推荐:visible.sync，因为.sync修饰符相当于触发dialog关闭回调，会将props的open设为false，但是props在子组件被修改是会报警告的
             解决方法：不使用修饰符，绑定关闭回调事件 :close="closeDialog"，触发父组件事件改变open值
         -->
-        <el-dialog :visible="open" v-if="business == 'insert'" width="30%" :close="closeDialog" :before-close="closeDialog">
+        <el-dialog :visible="open" v-if="business == 'insert'" width="30%" :close="closeDialog" :before-close="closeDialog" v-el-drag-dialog>
             <!-- 主题-->
             <template slot="title">
                 <svg-icon icon-class="新增" /> {{title}}
@@ -48,7 +48,7 @@
             </span>
         </el-dialog>
 
-        <el-dialog :visible="open" v-else-if="business == 'update'" width="30%" :close="closeDialog" :before-close="closeDialog" >
+        <el-dialog :visible="open" v-else-if="business == 'update'" width="30%" :close="closeDialog" :before-close="closeDialog" v-el-drag-dialog >
             <!-- 主题-->
             <template slot="title">
                 <svg-icon icon-class="修改" /> {{title}}
@@ -98,9 +98,13 @@
 
 <script>
 import { insertUser, updateUser } from '@/api/system'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
     export default {
         name:'UserDialog',
+        directives:{
+            elDragDialog
+        },
         data() {
             return {
                 userinfo:{
@@ -182,7 +186,6 @@ import { insertUser, updateUser } from '@/api/system'
                 let info = this.getUserinfo()
                 updateUser(info).then(response => {
                     const res = response.data
-                    console.log(res)
                     if(res.success){
                         this.$message({
                             message: res.msg,
@@ -235,7 +238,7 @@ import { insertUser, updateUser } from '@/api/system'
                     }
                 }
             },
-            userInfo2(newvalue){//监控gradeRow的数据变动，只有同时监控数据与操作类型的变更，再变更gradeInfo，这样才能动态打开获取对应的数据
+            userInfo2(newvalue){//监控Row的数据变动，只有同时监控数据与操作类型的变更，再变更Info，这样才能动态打开获取对应的数据
                 if(this.business == 'update' && typeof(newvalue) !== 'undefined'){
                     var info = JSON.parse(JSON.stringify(newvalue)) //解决父组件数据跟着变化的问题
                     this.userinfo = info
