@@ -31,3 +31,39 @@ import requestv2 from '@/utils/requestv2'
     data
   })
 }
+
+/**
+ * @param {String} StudentCno 班级编号
+ * 查询不同班级的学生信息，cno=null则查询未分配班级的，cno=''则查询全部学生
+ */
+ export function getStudentByCno(StudentCno){
+  return request({
+    url: '/student/getStudentByCno',
+    method: 'post',
+    responseType:'json',
+    params: {
+      cno: StudentCno
+    }
+  })
+}
+
+/**
+ * @param {Array} studentList
+ * @param {String} cno
+ * @param {String} clazz_name
+ * @param {Boolean} shift true：分配学生归属班级；false：取消分配
+ * 修改学生所属班级
+ */
+ export function updateStudentClazz(studentList,cno,clazz_name,shift){
+  return request({
+    url: '/student/updateStudentClazz',
+    method: 'post',
+    responseType:'json',
+    data: {
+      users: studentList,
+      cno: cno,
+      clazz_name: clazz_name,
+      shift: shift
+    }
+  })
+}

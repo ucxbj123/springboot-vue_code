@@ -7,7 +7,7 @@ const studentsRouter =
         component: Layout,
         name:'Student',
         meta: {
-            title: '学生信息管理',
+            title: '学生管理',
             icon: 'el-icon-s-check',
             roles: ['student']
         },
@@ -17,13 +17,13 @@ const studentsRouter =
                 path: 'main',
                 name: 'studentmain',
                 component: () => import('@/views/student/main'),
-                meta: { title: '学生模块', icon: 'el-icon-user-solid',roles: ['student'] }
+                meta: { title: '学生信息', icon: 'el-icon-user-solid',roles: ['student'] }
             },
             {
                 path: 'list',
                 name: 'studentlist',
                 component: () => import('@/views/student/studentList'),
-                meta: { title: '学生列表', icon: 'el-icon-user',roles: ['student']  }
+                meta: { title: '学生班级', icon: 'el-icon-user',roles: ['student']  }
             }
         ]
     }
