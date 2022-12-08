@@ -84,3 +84,22 @@ export function formatJson(filterVal, jsonData) {
     }
   }))
 }
+
+/**
+ * @param {JSON} obj 
+ * @param {Array} keys
+ * 用于获取json数据内特定的值，过滤掉不需要的的属性
+ * hasOwnProperty(propertyName)方法 是用来检测属性是否为对象的自有属性，如果是，返回true，否者false; 参数propertyName指要检测的属性名；
+ */
+ export function partObject(obj, keys) {
+  if(!keys instanceof Array || keys.length === 0){
+    return
+  }
+  let returnObj = {}
+  keys.forEach(item => {
+    if(obj.hasOwnProperty(item)){
+      returnObj[item] = obj [item]
+    }
+  })
+  return returnObj
+}

@@ -1,0 +1,145 @@
+<template>
+  <div class="app-container">
+    <el-row class="module-height" :gutter="20">
+      <!-- 年级-->
+      <el-col :span="6">
+        教师 <el-input class="inputwidth"  v-model="tno" placeholder="请输入教师账号" :disabled="allow"></el-input>
+      </el-col>
+      <el-col :span="6" >
+        <el-button type="primary" @click.native="getTnoClass(tno)" ><svg-icon icon-class="确定" /> 确 定</el-button>
+        <el-button type="primary" icon="el-icon-refresh" @click.native="Reset" >重 置</el-button>
+      </el-col>
+    </el-row>
+    <el-tabs type="border-card" v-model="tagName">
+        <el-tab-pane label="任课班级" name="Shift">
+            <!-- 穿梭框-->
+            <el-transfer
+            style="text-align: left; display: inline-block"
+            v-model="selectValue"
+            filterable
+            filter-placeholder="请输入班级进行搜索"
+            :props="{
+                key: 'cno',
+                label: 'name'
+            }"
+            :titles="['班级', `${teacherName}`]"
+            :button-texts="['取消', '任职']"
+            :format="{
+                noChecked: '${total}',
+                hasChecked: '${checked}/${total}'
+            }"
+            @change="handleTapChange"
+            :data="data">
+            <span slot-scope="{ option }">{{ option.cno }} - {{ option.name }}</span>
+            </el-transfer>
+        </el-tab-pane>
+        <el-tab-pane label="教学内容" name="content">
+            教学内容
+        </el-tab-pane>
+    </el-tabs>
+  </div>
+</template>
+
+<script>
+import { getClass, insertClassBatch, deleteClassBatch } from '@/api/teacher'
+import { partObject } from '@/utils/validate'
+ 
+export default {
+    name:"TeacherClass",
+    data() {
+        return {
+            selectValue: [],
+            data: [],
+            tno: '',
+            teacherName: '',
+            tagName: 'Shift',
+            allow: false,
+
+        }
+    },
+
+    methods:{
+        handleTapChange(CurrentValue,move,changeValue){//穿梭框右侧列表元素变化时触发的事件
+            let classinfo = []
+            //进行深拷贝，避免影响data的数据
+            let newdata = JSON.parse(JSON.stringify(this.data))
+            //处理数据返回给后台
+            newdata.forEach(item => {
+                changeValue.forEach(v => {
+                    if(item.cno == v){
+                        item['tno'] = this.tno
+                        item['clazz_name'] = item.name
+                        //item['clazz_name']必须放在前面，否则原来的name的值会不见
+                        item['name'] = this.teacherName
+                        classinfo.push(item)
+                    }
+                })
+            })
+            // console.log('结果',classinfo)    //调试，查询数据处理结果
+            if(move == 'right'){
+                insertClassBatch(classinfo).then(response =>{
+                    this.$message({
+                        message: response.data.msg,
+                        type: 'info'
+                    })
+                })
+            }else if(move == 'left'){
+                deleteClassBatch(classinfo).then(response =>{
+                    this.$message({
+                        message: response.data.msg,
+                        type: 'info'
+                    })
+                })
+            }
+        },
+
+        Reset(){
+            this.tno = ''
+            this.allow = false
+        },
+
+        getTnoClass(tno){//获取班级信息和任课班级用于穿梭框
+            //校验是否填写教师编号
+            if(tno == ''){
+                this.$message({
+                    message: '请输入教师编号，为必填项',
+                    type: 'info'
+                })
+                //中断操作
+                return
+            }
+            getClass(tno).then(response => {
+                const res = response.data.data
+                console.log('结果',res)     //调试，查看返回结果
+                this.data = res.clazz.map(v => {
+                    let keys = [ 'cno', 'name']
+                    return partObject(v,keys)
+                })
+                this.selectValue = res.class.map(v => {
+                    return v['cno']
+                })
+                this.teacherName = res.teacher.name
+
+                //锁定输入框
+                this.allow = true
+                
+            })
+        }
+    }
+}
+</script>
+
+<style scoped>
+.module-height{
+  height: 70px;
+}
+
+.inputwidth{
+    width: 200px;
+}
+
+.buttonMenu{
+    margin-bottom: 10px;
+}
+
+</style>

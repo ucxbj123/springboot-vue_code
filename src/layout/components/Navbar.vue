@@ -46,6 +46,7 @@
         title="修改密码"
         :visible.sync="centerDialogVisible"
         width="38%"
+        v-el-drag-dialog
         >
         <el-row :gutter="20">
           <el-col :span="8" :offset="2"><span>登录账号 </span><el-input label="登录账号" disabled v-model="userID"><svg-icon slot="prefix" icon-class="people" /></el-input></el-col>
@@ -69,11 +70,15 @@ import { mapGetters , mapState} from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import request from '@/utils/request'
+import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
 export default {
   components: {
     Breadcrumb,
     Hamburger
+  },
+  directives:{
+      elDragDialog
   },
   data() {
     return {

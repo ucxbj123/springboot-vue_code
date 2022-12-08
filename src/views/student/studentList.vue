@@ -129,6 +129,8 @@ export default {
         SearchButton(pagesize2,currentPage2){
           this.Search(pagesize2,currentPage2)
           this.FirstSearch = false //第一次执行查询功能后设为false
+          //切换tag为query
+          this.tagName = 'query'
         },
 
         Search(pagesize2,currentPage2){//搜索班级信息

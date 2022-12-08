@@ -31,3 +31,46 @@ import requestv2 from '@/utils/requestv2'
     data
   })
 }
+
+/**
+ * @param {String} tno 教师编号
+ * 获取教师的任职班级信息与所有班级信息
+ */
+ export function getClass(tno){
+  return request({
+    url: '/teacher/getClass',
+    method: 'get',
+    responseType:'json',
+    params:{
+      tno:tno
+    }
+  })
+}
+
+
+/**
+ * @param {Array} data 批量添加教师任课班级信息
+ * 
+ */
+ export function insertClassBatch(data){
+  return request({
+    url: '/teacher/insertClassBatch',
+    method: 'post',
+    responseType:'json',
+    data
+  })
+}
+
+
+/**
+ * @param {Array} data 批量删除教师任课班级信息
+ * 
+ */
+ export function deleteClassBatch(data){
+  return request({
+    url: '/teacher/deleteClassBatch',
+    method: 'post',
+    responseType:'json',
+    data
+  })
+}

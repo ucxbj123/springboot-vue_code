@@ -14,6 +14,12 @@ const teacherRouter =
                 name: 'TeacherMain',
                 component: () => import('@/views/teacher/main'),
                 meta: { title: '教师信息', icon: '人员管理' },
+            },
+            {
+                path: 'teacherClass',
+                name: 'TeacherClass',
+                component: () => import('@/views/teacher/TeacherClass'),
+                meta: { title: '任课班级', icon: '班级'}
             }
         ]
     }
