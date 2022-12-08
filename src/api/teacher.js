@@ -74,3 +74,21 @@ import requestv2 from '@/utils/requestv2'
     data
   })
 }
+
+/**
+ * @param {String} content 提交教师班级的授课内容
+ * @param {String} tno  教师编号
+ * @param {String} cno  班级编号
+*/
+ export function updateContent(content,tno,cno){
+  return request({
+    url: '/teacher/updateContent',
+    method: 'post',
+    responseType:'json',
+    data:{
+      content: content,
+      tno: tno,
+      cno: cno
+    }
+  })
+}

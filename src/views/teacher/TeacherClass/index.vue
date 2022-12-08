@@ -34,27 +34,55 @@
             </el-transfer>
         </el-tab-pane>
         <el-tab-pane label="教学内容" name="content">
-            教学内容
+            <el-select v-model="cno" filterable placeholder="请选择">
+                <el-option
+                v-for="item in options"
+                :key="item.cno"
+                :label="item.clazz_name"
+                :value="item.cno">
+                </el-option>
+            </el-select>
+            <!-- 文本框-->
+            <el-row class="content">
+                <el-col :span="8">
+                    <el-input
+                        type="textarea"
+                        placeholder="任课内容"
+                        v-model="content"
+                        maxlength="50"
+                        show-word-limit
+                        >
+                    </el-input>
+                </el-col>
+            </el-row>
+            <!-- 按钮-->
+            <el-row>
+                <el-col>
+                    <el-button type="primary" round icon="el-icon-check" @click.native="handover(content)">提 交</el-button>
+                </el-col>
+            </el-row>
         </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-import { getClass, insertClassBatch, deleteClassBatch } from '@/api/teacher'
+import { getClass, insertClassBatch, deleteClassBatch, updateContent } from '@/api/teacher'
 import { partObject } from '@/utils/validate'
  
 export default {
     name:"TeacherClass",
     data() {
         return {
-            selectValue: [],
-            data: [],
-            tno: '',
-            teacherName: '',
+            selectValue: [], //穿梭框右侧的值
+            data: [],       //总的数据
+            tno: '',        //教师编号
+            cno:'',         //选择器绑定的班级编号
+            teacherName: '',    //教师姓名
             tagName: 'Shift',
-            allow: false,
-
+            allow: false,   //是否禁用输入框
+            options: [],    //选择绑定的值
+            content: '',    //文本框的任课内容
         }
     },
 
@@ -124,6 +152,37 @@ export default {
                 this.allow = true
                 
             })
+        },
+
+        handover(content){//提交教师班级的授课内容
+            updateContent(content,this.tno,this.cno).then(response =>{
+                const res =response.data.data
+                this.$message({
+                    message: res.msg,
+                    type: 'info'
+                })
+            })
+        }
+    },
+
+    watch:{
+        selectValue:{
+            deep:true,
+            immediate:true,
+            handler(newValue,oldValue){
+                let option = []
+                //进行深拷贝，避免影响data的数据
+                let newdata = JSON.parse(JSON.stringify(this.data))
+                newdata.forEach(item => {
+                    newValue.forEach(v => {
+                        if(item.cno == v){                           
+                            item['clazz_name'] = item.name
+                            option.push(item)
+                        }
+                    })
+                })
+                this.options = option
+            }
         }
     }
 }
@@ -140,6 +199,10 @@ export default {
 
 .buttonMenu{
     margin-bottom: 10px;
+}
+.content{
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 </style>
