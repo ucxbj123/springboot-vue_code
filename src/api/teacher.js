@@ -85,8 +85,24 @@ import requestv2 from '@/utils/requestv2'
     url: '/teacher/updateContent',
     method: 'post',
     responseType:'json',
-    data:{
+    params:{
       content: content,
+      tno: tno,
+      cno: cno
+    }
+  })
+}
+
+/** 获取教师班级的授课内容
+ * @param {String} tno  教师编号
+ * @param {String} cno  班级编号
+*/
+export function getContentByTnoAndCno(tno,cno){
+  return request({
+    url: '/teacher/getContentByTnoAndCno',
+    method: 'post',
+    responseType:'json',
+    params:{
       tno: tno,
       cno: cno
     }

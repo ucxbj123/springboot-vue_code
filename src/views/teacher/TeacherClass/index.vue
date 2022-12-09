@@ -34,7 +34,7 @@
             </el-transfer>
         </el-tab-pane>
         <el-tab-pane label="教学内容" name="content">
-            <el-select v-model="cno" filterable placeholder="请选择">
+            <el-select v-model="cno" filterable placeholder="请选择" @change="changeSelect">
                 <el-option
                 v-for="item in options"
                 :key="item.cno"
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { getClass, insertClassBatch, deleteClassBatch, updateContent } from '@/api/teacher'
+import { getClass, insertClassBatch, deleteClassBatch, updateContent, getContentByTnoAndCno } from '@/api/teacher'
 import { partObject } from '@/utils/validate'
  
 export default {
@@ -78,7 +78,7 @@ export default {
             data: [],       //总的数据
             tno: '',        //教师编号
             cno:'',         //选择器绑定的班级编号
-            teacherName: '',    //教师姓名
+            teacherName: '无',    //教师姓名
             tagName: 'Shift',
             allow: false,   //是否禁用输入框
             options: [],    //选择绑定的值
@@ -124,6 +124,11 @@ export default {
         Reset(){
             this.tno = ''
             this.allow = false
+            this.cno = ''
+            this.data = []
+            this.selectValue = []
+            this.teacherName = '无'
+            this.content = ''
         },
 
         getTnoClass(tno){//获取班级信息和任课班级用于穿梭框
@@ -155,18 +160,31 @@ export default {
         },
 
         handover(content){//提交教师班级的授课内容
+            if(this.cno == ''){
+                this.$message('班级不能为空，是必选项')
+                return
+            }
             updateContent(content,this.tno,this.cno).then(response =>{
-                const res =response.data.data
+                const res =response.data
                 this.$message({
                     message: res.msg,
-                    type: 'info'
+                    type: 'success'
                 })
+                //提交成功后清除内容
+                this.content = ''
+            })
+        },
+        changeSelect(val){//用于选择班级时，获取任课内容并显示在文本中
+            if(this.tno == '') return
+            getContentByTnoAndCno(this.tno, val).then(response =>{
+                const res = response.data
+                this.content = res.data
             })
         }
     },
 
     watch:{
-        selectValue:{
+        selectValue:{//根据穿梭框值的变化，动态改变选择器的值
             deep:true,
             immediate:true,
             handler(newValue,oldValue){
