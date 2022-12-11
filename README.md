@@ -1,99 +1,186 @@
-# vue-admin-template
+### 简介
 
-English | [简体中文](./README-zh.md)
+------
 
-> A minimal vue admin template with Element UI & axios & iconfont & permission control & lint
+​		本项目是学生管理系统，参考https://github.com/GoogTech/sms-ssm，原项目主要是使用SSM+JSP的技术进行开发。主要是以该项目的一些理念和数据库作为参考，在原基础上使用最新的技术进行开发，实现前后端分离。
 
-**Live demo:** http://panjiachen.github.io/vue-admin-template
+​		前端：使用vue-admin-element的基础骨架进行二次开发，参考vue-element-admin的。实现页面权限限制，根据不同的用户类型动态生成路由表。还有一些细节大家可以去查看源码，个人建议还是使用基础骨架的模板进行开发，若有其他可以借鉴或者根据具体需求进行设计。
+
+​		后端：使用了第三方框架shiro在过滤器层面实现用户认证，同时摆脱session的限制，使用JTW技术生成口令返回给前端。导出功能是使用Easyexcel插件，是比较好用的excel处理工具。
+
+​		特别说明： 在本项目中：tb_admin、tb_student、tb_teacher的isdelete字段是代表账号的启用、禁用状态。 tb_clazz、tb_grade的isdelete是代表该数据是否删除
 
 
-**The current version is `v4.0+` build on `vue-cli`. If you want to use the old version , you can switch branch to [tag/3.11.0](https://github.com/PanJiaChen/vue-admin-template/tree/tag/3.11.0), it does not rely on `vue-cli`**
 
-<p align="center">
-  <b>SPONSORED BY</b>
-</p>
-<p align="center">
-   <a href="https://finclip.com?from=vue_element" title="FinClip" target="_blank">
-      <img height="200px" src="https://gitee.com/panjiachen/gitee-cdn/raw/master/vue%E8%B5%9E%E5%8A%A9.png" title="FinClip">
-   </a>
-</p>
+### 涉及技术
 
-## Build Setup
+前端：主要是使用vue、elementui、vuex、vue-router和一些第三方工具
 
-```bash
-# clone the project
-git clone https://github.com/PanJiaChen/vue-admin-template.git
+后端：springboot、mybatis-plus、Easyexcel、fastjson、shiro（认证和授权框架）、JWT、EHCache（mybatis第三方缓存）
 
-# enter the project directory
-cd vue-admin-template
 
-# install dependency
-npm install
 
-# develop
+### 项目截图
+
+#### 登录界面
+
+![image-20221211185947586](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211185947586.png)
+
+
+
+#### 首页
+
+![image-20221211190214529](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190214529.png)
+
+#### 
+
+#### 系统用户管理
+
+![image-20221211190248860](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190248860.png)
+
+
+
+#### 教师管理
+
+![image-20221211190333083](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190333083.png)
+
+
+
+#### 学生管理
+
+![image-20221211190412482](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190412482.png)
+
+
+
+#### 年级管理
+
+![image-20221211190501356](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190501356.png)
+
+
+
+#### 系统主题
+
+![image-20221211190522201](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190522201.png)
+
+
+
+### 系统模块介绍
+
+------
+
+#### 后端
+
+![image-20221211191056401](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211191056401.png)
+
+| 文件                | 说明                                       |
+| ------------------- | ------------------------------------------ |
+| AOP                 | 切面的实现，暂时未进行具体一些实现         |
+| Config              | 配置类，目前只有shiroConfig配置类          |
+| Controller          | 控制器，用于请求的访问                     |
+| DTO                 | 封装一些实体类用于接收前端的数据或响应数据 |
+| Mapper              | DAO层                                      |
+| Pojo                | 实体类，对应数据库的表                     |
+| Service.Impl        | 封装具体的业务逻辑                         |
+| Shiro               | 实现shiro的认证逻辑和过滤器                |
+| Util                | 实现的一些工具类，比如JWTUtil              |
+| application.yml     | 项目的配置在此设置                         |
+| ehcache.xml         | 第三方缓存配置文件                         |
+| generatorConfig.xml | 逆向工程配置文件                           |
+| jdbc.properties     | 数据库配置                                 |
+| logback-spring.xml  | 日志文件配置                               |
+
+
+
+#### 前端
+
+![image-20221211191830073](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211191830073.png)
+
+| 文件       | 说明                                        |
+| ---------- | ------------------------------------------- |
+| api        | axios的请求                                 |
+| assets     | 404t图片                                    |
+| components | 各种常用组件                                |
+| directive  | 自定义指令                                  |
+| icons      | svg的图标                                   |
+| layout     | 主要布局，例如头部面包屑，侧边栏            |
+| router     | 主路由和各个模块的路由                      |
+| store      | 全局状态管理                                |
+| style      | 样式                                        |
+| utils      | 常用的一些方法，包括已封装好的axios-request |
+| vendor     | 封装好的导出excel的js                       |
+| views      | 放置侧边菜单栏各个模块的组件                |
+
+
+
+### 开发
+
+前端
+
+#克隆项目
+
+gitee	git clone https://gitee.com/the-starry-sky-is-yes/springboot-vue_code.git
+
+github	git clone https://github.com/ucxbj123/springboot-vue_code.git
+
+
+
+#进入项目目录
+
+cd  springboot-vue_code/
+
+
+
+#安装依赖
+
+npm install  或者	npm install --legacy-peer-deps
+
+
+
+#启动服务
+
 npm run dev
-```
 
-This will automatically open http://localhost:9528
 
-## Build
 
-```bash
-# build for test environment
-npm run build:stage
+#访问
 
-# build for production environment
-npm run build:prod
-```
+浏览器访问 [http://localhost:9528](http://localhost:9528)
 
-## Advanced
 
-```bash
-# preview the release environment effect
-npm run preview
 
-# preview the release environment effect + static resource analysis
-npm run preview -- --report
+#发布-构建生产环境
 
-# code format check
-npm run lint
+ npm run build:prod
 
-# code format check and auto fix
-npm run lint -- --fix
-```
 
-Refer to [Documentation](https://panjiachen.github.io/vue-element-admin-site/guide/essentials/deploy.html) for more information
 
-## Demo
+后端
 
-![demo](https://github.com/PanJiaChen/PanJiaChen.github.io/blob/master/images/demo.gif)
+#克隆项目
 
-## Extra
+gitee git clone  https://gitee.com/the-starry-sky-is-yes/springboot.git
 
-If you want router permission && generate menu by user roles , you can use this branch [permission-control](https://github.com/PanJiaChen/vue-admin-template/tree/permission-control)
+github git clone  https://github.com/ucxbj123/springbootvue.git
 
-For `typescript` version, you can use [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template) (Credits: [@Armour](https://github.com/Armour))
 
-## Related Project
 
-- [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
+用idea打开项目，下载依赖
 
-- [electron-vue-admin](https://github.com/PanJiaChen/electron-vue-admin)
+本项目用是8.0.18版本的mysql，可以根据自己的情况改变依赖和jdbc.properties的配置
 
-- [vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
 
-- [awesome-project](https://github.com/PanJiaChen/vue-element-admin/issues/2312)
 
-## Browsers support
+创建数据库并导出sql文件-springbootvue.sql
 
-Modern browsers and Internet Explorer 10+.
 
-| [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)</br>Safari |
-| --------- | --------- | --------- | --------- |
-| IE10, IE11, Edge| last 2 versions| last 2 versions| last 2 versions
 
-## License
+### 交流
 
-[MIT](https://github.com/PanJiaChen/vue-admin-template/blob/master/LICENSE) license.
+后续有补充或者功能拓展会持续更新，并且近期会搭建一个云服务器，大家可以线上进行预览。
 
-Copyright (c) 2017-present PanJiaChen
+大家可以加入群进行技术交流，谢谢。
+
+![image-20221212000223856](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221212000223856.png)
+
+
+
