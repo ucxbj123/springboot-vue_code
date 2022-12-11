@@ -24,43 +24,43 @@
 
 #### 登录界面
 
-![image-20221211185947586](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211185947586.png)
+![image-20221211185947586](./image/login.png)
 
 
 
 #### 首页
 
-![image-20221211190214529](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190214529.png)
+![image-20221211190214529](./image/shoye.png)
 
 #### 
 
 #### 系统用户管理
 
-![image-20221211190248860](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190248860.png)
+![image-20221211190248860](./image/xitong.png)
 
 
 
 #### 教师管理
 
-![image-20221211190333083](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190333083.png)
+![image-20221211190333083](./image/teacher.png)
 
 
 
 #### 学生管理
 
-![image-20221211190412482](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190412482.png)
+![image-20221211190412482](./image/student.png)
 
 
 
 #### 年级管理
 
-![image-20221211190501356](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190501356.png)
+![image-20221211190501356](./image./grade.png)
 
 
 
 #### 系统主题
 
-![image-20221211190522201](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211190522201.png)
+![image-20221211190522201](./image/layout.png)
 
 
 
@@ -70,7 +70,7 @@
 
 #### 后端
 
-![image-20221211191056401](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211191056401.png)
+![image-20221211191056401](./image/springboot.png)
 
 | 文件                | 说明                                       |
 | ------------------- | ------------------------------------------ |
@@ -93,7 +93,7 @@
 
 #### 前端
 
-![image-20221211191830073](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221211191830073.png)
+![image-20221211191830073](./image/vue.png)
 
 | 文件       | 说明                                        |
 | ---------- | ------------------------------------------- |
@@ -180,7 +180,7 @@ github git clone  https://github.com/ucxbj123/springbootvue.git
 
 大家可以加入群进行技术交流，谢谢。
 
-![image-20221212000223856](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20221212000223856.png)
+![image-20221212000223856](./image/erweima.png)
 
 
 
