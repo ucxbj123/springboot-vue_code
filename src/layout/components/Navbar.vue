@@ -121,6 +121,13 @@ export default {
         })
         return
       }
+      if(this.userID == 'admin'){
+        this.$message({
+          message:'admin不允许修改密码',
+          type:'warning'
+        })
+        return
+      }
       request({//异步请求
         responseType:'json',
         data: this.changeForm,

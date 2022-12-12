@@ -213,6 +213,12 @@ export default {
               type:'info'
             })
             return
+          }else if(this.selectRow[0].userID == 'admin'){
+            this.$message({
+              message:'admin不允许修改资料',
+              type:'info'
+            })
+            return
           }
           this.titledialog = '修改用户信息'
           this.typedialog = 'update'
