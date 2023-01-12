@@ -46,6 +46,12 @@ module.exports = {
         pathRewrite:{'^/springboot':''},
         ws:true,
         changeOrigin:true
+      },
+      'check':{
+        target:'http://localhost:8083',
+        pathRewrite:{'^/check':''},
+        ws:true,
+        changeOrigin:true
       }
     }
   },
