@@ -103,3 +103,23 @@ export function formatJson(filterVal, jsonData) {
   })
   return returnObj
 }
+
+/**
+ * 递归处理多余的 layout : <router-view>，
+ * 让需要访问的组件保持在第一层 index : <router-view> 之下
+ * @param to
+ */
+ export function handleKeepAlive (to) {
+  if (to.matched && to.matched.length > 2) {
+    console.log('开始了')
+    for (let i = 0; i < to.matched.length; i++) {
+      const element = to.matched[i]
+      // console.log('elemen',element)
+      if (element.components.default.name === 'Layout') {
+        to.matched.splice(i, 1)
+        console.log(i,to)
+        handleKeepAlive(to)
+      }
+    }
+  }
+}

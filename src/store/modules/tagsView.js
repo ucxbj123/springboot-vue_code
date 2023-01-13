@@ -4,17 +4,26 @@ const state = {
 }
 
 const mutations = {
-  ADD_VISITED_VIEW: (state, view) => {
+  ADD_VISITED_VIEW: (state, view) => {//给需要添加的路由添加title属性，然后加入到visitedViews
+    //some() 方法用于检测数组中的元素是否满足指定条件（函数提供）,如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测。
     if (state.visitedViews.some(v => v.path === view.path)) return
     state.visitedViews.push(
+      //Object.assign可以用来复制对象的可枚举属性到目标对象，利用这个特性可以实现对象属性的合并,下面将view与后面的对象合并到一个{},
+      //若有同名属性，后面会覆盖前面.同时会影响目标对象原数据
       Object.assign({}, view, {
         title: view.meta.title || 'no-name'
       })
     )
   },
   ADD_CACHED_VIEW: (state, view) => {
+    //includes() 方法用来判断一个数组是否包含一个指定的值，如果是返回 true，否则false。
     if (state.cachedViews.includes(view.name)) return
     if (!view.meta.noCache) {
+      //个人添加部分：用于处理三级菜单的，添加二级组件进入缓存
+      if(view.matched.length > 2 && !state.cachedViews.includes(view.matched[1].name)){
+        state.cachedViews.push(view.matched[1].name)
+      }
+      //原始的部分
       state.cachedViews.push(view.name)
     }
   },

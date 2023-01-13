@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { handleKeepAlive } from '@/utils/validate'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -45,6 +46,7 @@ router.beforeEach(async(to, from, next) => {
       }
       if (hasinfo) {
         // console.log('有token又有info') //调试
+        // handleKeepAlive(to)
         next()
       } else {
         // console.log('有token无info') //调试
