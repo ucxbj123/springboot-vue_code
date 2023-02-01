@@ -1,7 +1,25 @@
 <template>
   <div>
+    <!-- 显示界面-->
+    <el-row :gutter="10" class="el" v-model="Row">
+      <el-form :inline="true" >
+        <el-form-item label="项目" >
+          <el-input  v-model="Row.project" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="检验标准">
+          <el-input  v-model="Row.standardname" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="编号">
+          <el-input  v-model="Row.standardcode" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="长度">
+          <el-input  v-model="Row.checklength" :disabled="true"></el-input>
+        </el-form-item> 
+      </el-form>
+    </el-row>
+
     <!-- 折叠面板：检验标准操作按钮-->
-    <el-row>
+    <el-row class="el">
       <el-collapse accordion>
         <el-collapse-item>
           <template slot="title">
@@ -17,7 +35,7 @@
     </el-row>
     <!-- 表格内容-->
     <el-row  v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0)">
+      element-loading-background="rgba(0, 0, 0, 0)" class="el">
         <el-table :data="detailedData.data" style="width:80%" stripe border highlight-current-row @selection-change="handleCurrentChange"  >
             <el-table-column type="selection" ></el-table-column>
             <el-table-column label="检验项目" align="center">
@@ -129,7 +147,7 @@
                 <span v-else>{{scope.row.ValueType}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="状态" align="center">
+            <el-table-column label="状态" align="center" width="100px">
               <!-- 自定义内容-->
               <template slot-scope="scope">
                 <el-button v-if="!scope.row.edit" @click.native="changeEdit(scope.row)">编辑</el-button>
@@ -148,6 +166,7 @@ export default {
         return {
             context: '',
             loading: false,
+            Row:{}, //主页传的检验标准信息
             detailedData: {
               data: [], //后台返回的校验标准明细数据
               selectRow: [], //存储选中的行数据
@@ -190,17 +209,14 @@ export default {
       }
     },
     mounted(){
-      this.detailedData.data.push({
-        StandardProject: '2',
-        CheckStartPosition: '',
-        StandardLength: '',
-        CheckCondition: '',
-        edit: false
-      })
+      const row = this.$route.query.data
+      this.Row = row
     }
 }
 </script>
 
-<style>
-
+<style scoped>
+.el{
+    margin-top: 20px;
+}
 </style>
