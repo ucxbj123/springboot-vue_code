@@ -24,6 +24,12 @@
         <el-form-item>
           <el-button type="primary" @click="opendialog()" icon="el-icon-circle-plus-outline">新增</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="updatestatus()"><svg-icon icon-class="确定" /> 启用/禁用</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="deleteOne()" icon="el-icon-delete-solid">删除</el-button>
+        </el-form-item>
       </el-form>
     </el-row>
     <!-- 表格内容-->
@@ -90,7 +96,7 @@
 </template>
 
 <script>
-import { insertproject, getproject } from '@/api/other/check'
+import { insertproject, getproject, updateIsenabled, deleteProject } from '@/api/other/check'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
 
 
@@ -206,6 +212,64 @@ export default {
         })
 
       },
+
+      updatestatus(){//启用或者禁用项目检验
+        if(this.checkdata.selectRow.length == 1){
+           const row = this.checkdata.selectRow[0]
+           let result = false
+           if(!row.isenabled){
+            result = true
+           }
+           updateIsenabled(result,row.id).then(response => {
+            const res = response.data
+            if(res.success){
+              this.$message({
+                  message: res.msg,
+                  type: 'success'
+              })
+              this.checkdata.selectRow[0].isenabled = result
+            }else{
+                this.$message({
+                    message: res.msg,
+                    type: 'error'
+                })
+            }
+           })
+        }else{
+          this.$message({
+            message: "只能单条信息启用/禁用",
+            type: 'warning'
+          })
+        }
+      },
+
+      deleteOne(){//删除校验项目
+        if(this.checkdata.selectRow.length == 1){
+          deleteProject(this.checkdata.selectRow[0].standardcode).then(response => {
+            const res = response.data
+            if(res.success){
+              this.$message({
+                  message: res.msg,
+                  type: 'success'
+              })
+              //同步将页面上的数据删除
+              let index = this.checkdata.data.indexOf(this.checkdata.selectRow[0])
+              this.checkdata.data.splice(index,1)
+            }else{
+                this.$message({
+                    message: res.msg,
+                    type: 'error'
+                })
+            }
+          })
+        }else{
+          this.$message({
+            message: "只能单条删除",
+            type: 'warning'
+          })
+        }
+      },
+
       opendialog(){
         this.dialog = true
       },
