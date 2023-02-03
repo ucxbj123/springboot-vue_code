@@ -48,7 +48,7 @@
     <!-- 表格内容-->
     <el-row  v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0)" class="el">
-        <el-table :data="detailedData.data" style="width:80%" stripe border highlight-current-row @selection-change="handleCurrentChange" 
+        <el-table :data="detailedData.data" style="width:80%" border highlight-current-row @selection-change="handleCurrentChange" 
           :row-class-name="RowClassName" >
             <el-table-column type="selection" ></el-table-column>
             <el-table-column label="检验项目" align="center">
@@ -312,7 +312,8 @@ export default {
           var status = true
           for( let j = 0; j < re.length; j++ ){
             if(!re[j].success){
-              result = result + re[j].message
+              result += re[j].standardproject +':'+ re[j].message
+              result += '  '
               status = false
             }
           }
@@ -327,15 +328,18 @@ export default {
         })
       },
       RowClassName({row, rowIndex}){//判断行内状态，显示不同颜色
-          // console.log(row,rowIndex)
+          console.log(row,rowIndex)
           const data = this.detailedData.resultRow
-          for(let i = 0; i < data.length; i++){
+          if(data.length > 0){
+            for(let i = 0; i < data.length; i++){
             if(row.id == data[i].id && !data[i].success){//若返回对应检验项的结果是失败的，则行高亮红色
-              console.log(row.standardproject)
-              return 'warning-row'
+                console.log(row.standardproject)
+                return 'warning-row'
+              }
             }
+            // return 'success-row'
           }
-          return 'success-row'
+          return ''
       }
     },
     mounted(){
@@ -343,7 +347,7 @@ export default {
       const standardcode = this.Row.standardcode
       getTeststandard(standardcode).then(response =>{
         const res = response.data.data
-        for( let i = 0; i < res.length; i++){
+        for( let i = 0; i < res.length; i++){//添加edit属性用于编辑检验项的控制
           res[i].edit = false
         }
         this.detailedData.data = this.detailedData.data.concat(res)
@@ -357,9 +361,9 @@ export default {
     margin-top: 20px;
 }
 .el-table .warning-row{
-  background: #EE113D;
+  background: #b42e49;
 }
 .el-table .success-row {
-    background: #f0f9eb;
+    background: #13CE66;
   }
 </style>
