@@ -91,3 +91,20 @@ export function saveStandard(data,standardcode) {
     }
   })
 }
+
+/** 
+ * @param {String} standardcode
+ * @param {String} code
+ * 提供检验标准编号与条码进行校验
+ */
+ export function checkcodeOne(standardcode,code) {
+  return request({
+    url: '/inspect/checkcode',
+    method: 'post',
+    responseType:'json',
+    params: {
+      standardcode: standardcode,
+      code: code
+    }
+  })
+}

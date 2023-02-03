@@ -18,6 +18,17 @@
       </el-form>
     </el-row>
 
+    <!-- 显示界面-->
+    <el-row :gutter="10" class="el">
+      <el-col :span="6">
+        <el-form label-width="100px" label-position="left">
+          <el-form-item label="条码">
+            <el-input  v-model="checkcode" @keydown.native.enter="check()"></el-input>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
     <!-- 折叠面板：检验标准操作按钮-->
     <el-row class="el">
       <el-collapse accordion>
@@ -37,7 +48,8 @@
     <!-- 表格内容-->
     <el-row  v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0)" class="el">
-        <el-table :data="detailedData.data" style="width:80%" stripe border highlight-current-row @selection-change="handleCurrentChange"  >
+        <el-table :data="detailedData.data" style="width:80%" stripe border highlight-current-row @selection-change="handleCurrentChange" 
+          :row-class-name="RowClassName" >
             <el-table-column type="selection" ></el-table-column>
             <el-table-column label="检验项目" align="center">
               <!-- 自定义内容-->
@@ -161,7 +173,8 @@
 </template>
 
 <script>
-import { saveStandard, getTeststandard } from '@/api/other/check'
+import { saveStandard, getTeststandard, checkcodeOne } from '@/api/other/check'
+import { isInteger } from '@/utils/validate'
 
 
 export default {
@@ -170,10 +183,12 @@ export default {
         return {
             context: '',
             loading: false,
+            checkcode: '',  //待校验的条码条码
             Row: this.$route.query.data ? this.$route.query.data : {project: '', standardname: '', standardcode: '', checklength : 0}, //主页传的检验标准信息
             detailedData: {
               data: [], //后台返回的校验标准明细数据
               selectRow: [], //存储选中的行数据
+              resultRow: [], //后台返回检验项的校验结果
               updateRow: [], //某一校验项目的逻辑修改结果，未使用
               deleteRow: [], //删除某一检验项目的逻辑，未使用
               insertRow: [], //添加新的校验项目，未使用
@@ -204,8 +219,21 @@ export default {
       handleCurrentChange(selectRow){//表格选择row后的触发事件，储存选中的行
         this.detailedData.selectRow = selectRow
       },
-      changeEdit(row){//改变行记录的编辑状态
-        if(row.edit){
+      changeEdit(row){//保存行记录的编辑状态,需要限制检验条件、起始位置、长度为必选；再根据情况是否限制检验条件2为必选
+        if(row.edit){//需要保存记录
+          if(row.checkstartposition == '' || row.standardlength == '' || row.checkcondition == '' || row.ischeck == '' || row.valuetype == ''){
+            this.$message({message: '检验条件、起始位置、长度、是否校验、值类型为必填', type: 'warning'})
+            return
+          }else if(row.logicvalue.length != ''){
+            if(row.checkcondition1 == ''){
+              this.$message({message: '因逻辑值不为空,检验条件2为必填', type: 'warning'})
+              return
+            }
+          }else if(!isInteger(row.standardlength) || !isInteger(row.checkstartposition)){
+              this.$message({message:'起始位置、长度只能填正整数', type: 'warning'})
+              return
+          }
+          //关闭编辑状态
           row.edit = false
         }else{
           row.edit = true
@@ -233,7 +261,21 @@ export default {
         const len = this.detailedData.data.length
         this.detailedData.data.splice(0,len)
       },
-      saveRow(){
+      saveRow(){//保存检验项
+        //若有检验项处于编辑状态不允许保存
+        var status = false
+        const data = this.detailedData.data
+        for(let i = 0; i< data.length; i++){
+          if(data[i].edit){
+            status = true
+            //若有处于编辑状态则中断循环继续判断
+            break
+          }
+        }
+        if(status){
+          this.$message({message:'还有检验项处于编辑状态，请先编辑完！', type: 'warning'})
+          return
+        }
         saveStandard(this.detailedData.data, this.Row.standardcode).then(response => {
           const res = response.data
           if(res.success){
@@ -248,6 +290,52 @@ export default {
               })
           }
         })
+      },
+      check(){//校验条码
+        if(this.checkcode == ''){
+          this.$message({
+            message: '条码不能为空',
+            type: 'warning'
+          })
+          return
+        }else if(!this.Row.isenabled){
+          this.$message({message:this.Row.standardname+'检验标准未启用，请先启用',type: 'warning'})
+          return
+        }
+        //通过则继续往下执行
+        checkcodeOne(this.Row.standardcode, this.checkcode).then(response => {
+          const res = response.data
+          const re = res.data
+          //接收后台返回的各个检验项的校验结果
+          this.detailedData.resultRow = re
+          var result = ''
+          var status = true
+          for( let j = 0; j < re.length; j++ ){
+            if(!re[j].success){
+              result = result + re[j].message
+              status = false
+            }
+          }
+          if(status){
+            this.$message({
+              message: '校验通过',
+              type: 'success'
+            })
+          }else{
+            this.$message.error(result)
+          }
+        })
+      },
+      RowClassName({row, rowIndex}){//判断行内状态，显示不同颜色
+          // console.log(row,rowIndex)
+          const data = this.detailedData.resultRow
+          for(let i = 0; i < data.length; i++){
+            if(row.id == data[i].id && !data[i].success){//若返回对应检验项的结果是失败的，则行高亮红色
+              console.log(row.standardproject)
+              return 'warning-row'
+            }
+          }
+          return 'success-row'
       }
     },
     mounted(){
@@ -264,8 +352,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .el{
     margin-top: 20px;
 }
+.el-table .warning-row{
+  background: #EE113D;
+}
+.el-table .success-row {
+    background: #f0f9eb;
+  }
 </style>

@@ -123,3 +123,12 @@ export function formatJson(filterVal, jsonData) {
     }
   }
 }
+
+/**
+ * @param {String} obj 
+ * 用于判断一个字符串是否为正整数
+ */
+ export function isInteger(obj) {
+  var r = /^\+?[1-9][0-9]*$/
+  return r.test(obj)
+}
