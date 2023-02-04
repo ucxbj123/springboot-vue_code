@@ -173,6 +173,12 @@
             </el-table-column>
         </el-table>
     </el-row>
+    <el-row>
+      <!-- 校验条码提示音：要显示在界面上需要设置controls-->
+      <audio :src="publicPath+'mp3/成功.mp3'" ref="audiosucess">成功</audio>
+      <audio :src="publicPath+'mp3/错误1.mp3'" ref="audioerror1">错误1</audio>
+      <audio :src="publicPath+'mp3/错误2.mp3'" ref="audioerror2" >错误2</audio>
+    </el-row>
   </div>
 </template>
 
@@ -188,6 +194,7 @@ export default {
             context: '',
             loading: false,
             checkcode: '',  //待校验的条码条码
+            publicPath: process.env.BASE_URL,   //指向public内的静态资源
             Row: this.$route.query.data ? this.$route.query.data : {project: '', standardname: '', standardcode: '', checklength : 0}, //主页传的检验标准信息
             detailedData: {
               data: [], //后台返回的校验标准明细数据
@@ -335,7 +342,11 @@ export default {
               message: '校验通过',
               type: 'success'
             })
+            //添加成功提示音
+            this.$refs.audiosucess.play()
           }else{
+            //添加错误提示音
+            this.$refs.audioerror2.play()
             this.$confirm(result, '校验失败', {
               confirmButtonText: '确定',
               type: 'error',
