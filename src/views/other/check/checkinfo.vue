@@ -98,6 +98,7 @@
 <script>
 import { insertproject, getproject, updateIsenabled, deleteProject } from '@/api/other/check'
 import elDragDialog from '@/directive/el-drag-dialog' // base on element-ui
+import { isInteger } from '@/utils/validate'
 
 
 export default {
@@ -183,9 +184,16 @@ export default {
         
       },
       Insert(){
+        console.log('结果：'+isInteger(this.checkdata.checklength))
         if (this.checkdata.project == '' || this.checkdata.standardname == '' || this.checkdata.checklength == ''){
           this.$message({
             message:'项目、检验标准、长度是必填项',
+            type: 'warning'
+          })
+          return
+        }else if(!isInteger(this.checkdata.checklength)){
+          this.$message({
+            message:'长度填整数',
             type: 'warning'
           })
           return

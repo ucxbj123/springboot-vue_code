@@ -21,9 +21,13 @@
     <!-- 显示界面-->
     <el-row :gutter="10" class="el">
       <el-col :span="6">
-        <el-form label-width="100px" label-position="left">
+        <!-- 当一个 form 元素中只有一个输入框时，在该输入框中按下回车应提交该表单。如果希望阻止这一默认行为，可以 在 标签上添加 @submit.native.prevent-->
+        <el-form label-width="100px" label-position="left"  @submit.native.prevent>
           <el-form-item label="条码">
-            <el-input  v-model="checkcode" @keydown.native.enter="check()"></el-input>
+            <el-tooltip effect="dark" content="回车即可进行条码校验" placement="top">
+              <!-- <el-input  v-model="checkcode" @keydown.enter.native="check()"></el-input> -->
+              <el-input  v-model="checkcode" @keydown.native.enter="check()"></el-input>
+            </el-tooltip>
           </el-form-item>
         </el-form>
       </el-col>
@@ -279,6 +283,9 @@ export default {
         saveStandard(this.detailedData.data, this.Row.standardcode).then(response => {
           const res = response.data
           if(res.success){
+            //保存成功则删除界面上的明细表，再向后台查询并更新，这样每一个检验项目就会有对应的id属性
+            this.detailedData.data = []
+            this.getStandard()
             this.$message({
                 message: res.msg,
                 type: 'success'
@@ -310,10 +317,16 @@ export default {
           this.detailedData.resultRow = re
           var result = ''
           var status = true
-          for( let j = 0; j < re.length; j++ ){
+          // for( let j = 0; j < re.length; j++ ){
+          //   if(!re[j].success){
+          //     result += re[j].standardproject +':'+ re[j].message
+          //     result += '  '
+          //     status = false
+          //   }
+          // }
+           for( let j = 0; j < re.length; j++ ){
             if(!re[j].success){
-              result += re[j].standardproject +':'+ re[j].message
-              result += '  '
+              result += '<span>'+re[j].standardproject +':'+ re[j].message+'</span><br/>'
               status = false
             }
           }
@@ -323,35 +336,41 @@ export default {
               type: 'success'
             })
           }else{
-            this.$message.error(result)
+            this.$confirm(result, '校验失败', {
+              confirmButtonText: '确定',
+              type: 'error',
+              dangerouslyUseHTMLString: true,
+              center: true
+            })
           }
         })
       },
       RowClassName({row, rowIndex}){//判断行内状态，显示不同颜色
-          console.log(row,rowIndex)
           const data = this.detailedData.resultRow
           if(data.length > 0){
             for(let i = 0; i < data.length; i++){
             if(row.id == data[i].id && !data[i].success){//若返回对应检验项的结果是失败的，则行高亮红色
-                console.log(row.standardproject)
                 return 'warning-row'
               }
             }
             // return 'success-row'
           }
           return ''
+      },
+      getStandard(){//获取standardcode对应的检验标准明显
+        const standardcode = this.Row.standardcode
+        getTeststandard(standardcode).then(response =>{
+          const res = response.data.data
+          for( let i = 0; i < res.length; i++){//添加edit属性用于编辑检验项的控制
+            res[i].edit = false
+          }
+          this.detailedData.data = this.detailedData.data.concat(res)
+        })
       }
     },
     mounted(){
       //页面加载时将对应的编号的检验项显示
-      const standardcode = this.Row.standardcode
-      getTeststandard(standardcode).then(response =>{
-        const res = response.data.data
-        for( let i = 0; i < res.length; i++){//添加edit属性用于编辑检验项的控制
-          res[i].edit = false
-        }
-        this.detailedData.data = this.detailedData.data.concat(res)
-      })
+      this.getStandard()
     }
 }
 </script>
