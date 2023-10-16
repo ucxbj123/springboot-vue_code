@@ -103,3 +103,18 @@ export function formatJson(filterVal, jsonData) {
   })
   return returnObj
 }
+
+
+/**
+ * @param {String} obj 
+ * 根据是否配置hostname为localip进行处理，若配置为localip，则获取浏览器的host把url中的hostname进行替换，进行url重写
+ */
+export function rewirteurl(obj) {
+  if (obj.indexOf('localip') != -1){
+      //获取当前网页访问的hostname作为新url组成部分
+      let str = window.location.hostname
+      //replace()替换第一个匹配到的字符
+      return obj.replace('localip',str)
+  }
+  return obj
+}

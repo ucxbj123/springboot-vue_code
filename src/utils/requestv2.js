@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { rewirteurl } from '@/utils/validate'
 
 /**
  * 主要是用来获取后端返回流数据，例如excel文件等，避免响应拦截保存
@@ -9,7 +10,7 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: rewirteurl(process.env.VUE_APP_BASE_API), // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
