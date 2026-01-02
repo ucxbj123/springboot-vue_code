@@ -132,7 +132,7 @@ cd  springboot-vue_code/
 
 
 
-#安装依赖
+#安装依赖，node版本：v16.17.0
 
 npm install  或者	npm install --legacy-peer-deps
 
